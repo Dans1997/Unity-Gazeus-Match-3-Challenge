@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scenes
+  m_EditorClassIdentifier: 
+  m_GroupName: Scenes
+  m_Data:
+    m_SerializedData: []
+  m_GUID: fed650bc8ee17cc4787fcdce5c19380f
+  m_SerializeEntries:
+  - m_GUID: 116959cecbee7ff46b242fa51e547ee0
+    m_Address: Assets/Project/Scenes/SCN_MainMenu.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2cda990e2423bbf4892e6590ba056729
+    m_Address: Assets/Project/Scenes/SCN_Gameplay.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d2d5b23e37098e40a0e0ff11ff1ce09
+    m_Address: Assets/Project/Scenes/SCN_LoadingScreen.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5ae8a7564f813894496c9d3491d5a0d5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6eb816275c905784387263d0c276f13b, type: 2}
+    - {fileID: 11400000, guid: 51c5848d42c01524a8cbb9467ebaaff6, type: 2}
