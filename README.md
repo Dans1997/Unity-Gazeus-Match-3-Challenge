@@ -118,7 +118,6 @@ After reviewing the provided project and instructions, here are my first impress
 
 In practice, this may result in the best-looking and least-buggy game being favored, even if another developer has superior architecture or scalability in their code.
 Selection might gravitate toward a submission that looks like a Gazeus-style game, consciously or not.
-Overall, I see this challenge as an opportunity to balance **technical excellence** with **visual polish**, while being mindful of time allocation. 
 
 #### **First Impressions Of The Code**
 The project follows a lightweight MVC-ish separation:
@@ -181,7 +180,17 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **View Utility**: Added LoadingScreenView with cached CanvasGroup for fades.
 * **Cleanup & Safety**: Ensured event unsubscription and Addressables.Release in Dispose paths for all instantiated views.
 * **Scoring Stubs**: Added placeholder interfaces (IScoreCalculator/IScoreRule/IScoreService) with TODOs; no scoring implementation yet.
-
+* **TileInfo System**:  Renamed `Tile` to `TileInfo` and replaced `int type` with enum `TileKey` for type-safe tile identification.
+* **Board Prefab Injection**:  GameplayController now injects BoardCellView prefab and TileInfo prefabs via GameConfig, removing hard-coded prefab references.
+* **TileKey Enum**:  Added enum `TileKey` with all tile types (Blue, Green, Orange, Pink, Purple, Red, Yellow) for consistency across the system.
+* **IBoardCellView Interface**:  Introduced interface for `BoardCellView` to expose events, Transform access, and tile animation methods.
+* **BoardCellView Implementation**:  Updated BoardCellView to implement `IBoardCellView`.
+* **BoardView Refactor**:  Updated `BoardView` to use LeanPool for tile and board cell instantiation; now supports injected tile prefabs and prefab-based board cells.
+* **CreateBoard Logic**:  BoardView.CreateBoard now assigns TileInfo types to prefabs, sets positions, and wires click events using injected prefabs.
+* **Tile Creation & Animation**:  BoardView.CreateTile uses injected tile prefabs with LeanPool and animates appearance using DOTween sequences.
+* **Tile Movement & Swap**:  BoardView.MoveTiles and SwapTiles updated to animate tiles between BoardCellViews using AnimatedSetTile, keeping _tiles state consistent.
+* **LeanPool Integration**:  Replaced direct Instantiate/Destroy calls with LeanPool.Spawn/Despawn for efficient tile and board cell reuse.
+* **TODOs Maintained**:  TileInfo still has placeholder properties for BackgroundColor and Icon; scoring system still not implemented.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

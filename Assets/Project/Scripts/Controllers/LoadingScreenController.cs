@@ -24,11 +24,12 @@ namespace Gazeus.DesafioMatch3.Controllers
         
         public async UniTask Initialize()
         {
-            loadingScreenView = await AssetProvider.InstantiateAsync<LoadingScreenView>(loadingScreenViewKey.ToString());
+            loadingScreenView = await AssetProvider.InstantiateAsync<LoadingScreenView>(loadingScreenViewKey);
         }
 
         public void Dispose()
         {
+            if (loadingScreenView == null) return;
             AssetProvider.Release(loadingScreenView.gameObject);
             loadingScreenView = null;
         }

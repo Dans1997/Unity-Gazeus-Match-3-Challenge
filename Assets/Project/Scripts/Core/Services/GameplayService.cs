@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gazeus.DesafioMatch3.Core.Services
 {
     public class GameplayService : IGameplayService
     {
-        public List<List<Tile>> BoardTiles { get; private set; }
-        public List<int> TilesTypes { get; private set; }
+        public List<List<TileInfo>> BoardTiles { get; private set; }
+        public TileKey[] TilesTypes { get; private set; }
         public int TileCount { get; private set; }
 
         public bool IsValidMovement(int fromX, int fromY, int toX, int toY)
@@ -22,15 +25,15 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 for (var x = 0; x < newBoard[y].Count; x++)
                 {
                     if (x > 1 &&
-                        newBoard[y][x].Type == newBoard[y][x - 1].Type &&
-                        newBoard[y][x - 1].Type == newBoard[y][x - 2].Type)
+                        newBoard[y][x].Key == newBoard[y][x - 1].Key &&
+                        newBoard[y][x - 1].Key == newBoard[y][x - 2].Key)
                     {
                         return true;
                     }
 
                     if (y > 1 &&
-                        newBoard[y][x].Type == newBoard[y - 1][x].Type &&
-                        newBoard[y - 1][x].Type == newBoard[y - 2][x].Type)
+                        newBoard[y][x].Key == newBoard[y - 1][x].Key &&
+                        newBoard[y - 1][x].Key == newBoard[y - 2][x].Key)
                     {
                         return true;
                     }
@@ -40,9 +43,9 @@ namespace Gazeus.DesafioMatch3.Core.Services
             return false;
         }
 
-        public List<List<Tile>> StartGame(int boardWidth, int boardHeight)
+        public List<List<TileInfo>> StartGame(int boardWidth, int boardHeight)
         {
-            TilesTypes = new List<int> { 0, 1, 2, 3 };
+            TilesTypes = (TileKey[]) Enum.GetValues(typeof(TileKey));
             BoardTiles = CreateBoard(boardWidth, boardHeight, TilesTypes);
 
             return BoardTiles;
@@ -66,7 +69,7 @@ namespace Gazeus.DesafioMatch3.Core.Services
                     {
                         if (!matchedTiles[y][x]) continue;
                         matchedPosition.Add(new Vector2Int(x, y));
-                        newBoard[y][x] = new Tile { Id = -1, Type = -1 };
+                        newBoard[y][x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
                     }
                 }
 
@@ -76,32 +79,31 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 {
                     var x = matchedPosition[i].x;
                     var y = matchedPosition[i].y;
-                    if (y > 0)
+                    if (y <= 0) continue;
+                    
+                    for (var j = y; j > 0; j--)
                     {
-                        for (var j = y; j > 0; j--)
-                        {
-                            var movedTile = newBoard[j - 1][x];
-                            newBoard[j][x] = movedTile;
-                            if (movedTile.Type <= -1) continue;
+                        var movedTile = newBoard[j - 1][x];
+                        newBoard[j][x] = movedTile;
+                        if (movedTile.Key == (TileKey) (-1)) continue;
                             
-                            if (movedTiles.TryGetValue(movedTile.Id, out var tile))
-                            {
-                                tile.To = new Vector2Int(x, j);
-                            }
-                            else
-                            {
-                                MovedTileInfo movedTileInfo = new()
-                                {
-                                    From = new Vector2Int(x, j - 1),
-                                    To = new Vector2Int(x, j)
-                                };
-                                movedTiles.Add(movedTile.Id, movedTileInfo);
-                                movedTilesList.Add(movedTileInfo);
-                            }
+                        if (movedTiles.TryGetValue(movedTile.Id, out var tile))
+                        {
+                            tile.To = new Vector2Int(x, j);
                         }
-
-                        newBoard[0][x] = new Tile { Id = -1, Type = -1 };
+                        else
+                        {
+                            MovedTileInfo movedTileInfo = new()
+                            {
+                                From = new Vector2Int(x, j - 1),
+                                To = new Vector2Int(x, j)
+                            };
+                            movedTiles.Add(movedTile.Id, movedTileInfo);
+                            movedTilesList.Add(movedTileInfo);
+                        }
                     }
+
+                    newBoard[0][x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
                 }
 
                 List<AddedTileInfo> addedTiles = new();
@@ -109,16 +111,16 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 {
                     for (var x = newBoard[y].Count - 1; x > -1; x--)
                     {
-                        if (newBoard[y][x].Type != -1) continue;
+                        if (newBoard[y][x].Key != (TileKey) (-1)) continue;
                         
-                        var tileType = Random.Range(0, TilesTypes.Count);
+                        var tileType = Random.Range(0, TilesTypes.Length);
                         var tile = newBoard[y][x];
                         tile.Id = TileCount++;
-                        tile.Type = TilesTypes[tileType];
+                        tile.Key = TilesTypes[tileType];
                         addedTiles.Add(new AddedTileInfo
                         {
                             Position = new Vector2Int(x, y),
-                            Type = tile.Type
+                            Key = tile.Key
                         });
                     }
                 }
@@ -138,33 +140,33 @@ namespace Gazeus.DesafioMatch3.Core.Services
             return boardSequences;
         }
 
-        private static List<List<Tile>> CopyBoard(List<List<Tile>> boardToCopy)
+        private static List<List<TileInfo>> CopyBoard(List<List<TileInfo>> boardToCopy)
         {
-            List<List<Tile>> newBoard = new(boardToCopy.Count);
+            List<List<TileInfo>> newBoard = new(boardToCopy.Count);
             for (var y = 0; y < boardToCopy.Count; y++)
             {
-                newBoard.Add(new List<Tile>(boardToCopy[y].Count));
+                newBoard.Add(new List<TileInfo>(boardToCopy[y].Count));
                 for (var x = 0; x < boardToCopy[y].Count; x++)
                 {
                     var tile = boardToCopy[y][x];
-                    newBoard[y].Add(new Tile { Id = tile.Id, Type = tile.Type });
+                    newBoard[y].Add(new TileInfo { Id = tile.Id, Key = tile.Key });
                 }
             }
 
             return newBoard;
         }
 
-        private List<List<Tile>> CreateBoard(int width, int height, List<int> tileTypes)
+        private List<List<TileInfo>> CreateBoard(int width, int height, Array tileTypes)
         {
-            List<List<Tile>> board = new(height);
+            List<List<TileInfo>> board = new(height);
             TileCount = 0;
 
             for (var y = 0; y < height; y++)
             {
-                board.Add(new List<Tile>(width));
+                board.Add(new List<TileInfo>(width));
                 for (var x = 0; x < width; x++)
                 {
-                    board[y].Add(new Tile { Id = -1, Type = -1 });
+                    board[y].Add(new TileInfo { Id = -1, Key = (TileKey) (-1) });
                 }
             }
 
@@ -172,27 +174,27 @@ namespace Gazeus.DesafioMatch3.Core.Services
             {
                 for (var x = 0; x < width; x++)
                 {
-                    List<int> noMatchTypes = new(tileTypes.Count);
-                    for (var i = 0; i < tileTypes.Count; i++)
+                    List<TileKey> noMatchTypes = new(tileTypes.Length);
+                    for (var i = 0; i < tileTypes.Length; i++)
                     {
                         noMatchTypes.Add(TilesTypes[i]);
                     }
 
-                    if (x > 1 && board[y][x - 1].Type == board[y][x - 2].Type)
-                        noMatchTypes.Remove(board[y][x - 1].Type);
+                    if (x > 1 && board[y][x - 1].Key == board[y][x - 2].Key)
+                        noMatchTypes.Remove(board[y][x - 1].Key);
 
-                    if (y > 1 && board[y - 1][x].Type == board[y - 2][x].Type)
-                        noMatchTypes.Remove(board[y - 1][x].Type);
+                    if (y > 1 && board[y - 1][x].Key == board[y - 2][x].Key)
+                        noMatchTypes.Remove(board[y - 1][x].Key);
 
                     board[y][x].Id = TileCount++;
-                    board[y][x].Type = noMatchTypes[Random.Range(0, noMatchTypes.Count)];
+                    board[y][x].Key = noMatchTypes[Random.Range(0, noMatchTypes.Count)];
                 }
             }
 
             return board;
         }
 
-        private static List<List<bool>> FindMatches(List<List<Tile>> newBoard)
+        private static List<List<bool>> FindMatches(List<List<TileInfo>> newBoard)
         {
             List<List<bool>> matchedTiles = new();
             for (var y = 0; y < newBoard.Count; y++)
@@ -209,8 +211,8 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 for (var x = 0; x < newBoard[y].Count; x++)
                 {
                     if (x > 1 &&
-                        newBoard[y][x].Type == newBoard[y][x - 1].Type &&
-                        newBoard[y][x - 1].Type == newBoard[y][x - 2].Type)
+                        newBoard[y][x].Key == newBoard[y][x - 1].Key &&
+                        newBoard[y][x - 1].Key == newBoard[y][x - 2].Key)
                     {
                         matchedTiles[y][x] = true;
                         matchedTiles[y][x - 1] = true;
@@ -218,8 +220,8 @@ namespace Gazeus.DesafioMatch3.Core.Services
                     }
 
                     if (y > 1 &&
-                        newBoard[y][x].Type == newBoard[y - 1][x].Type &&
-                        newBoard[y - 1][x].Type == newBoard[y - 2][x].Type)
+                        newBoard[y][x].Key == newBoard[y - 1][x].Key &&
+                        newBoard[y - 1][x].Key == newBoard[y - 2][x].Key)
                     {
                         matchedTiles[y][x] = true;
                         matchedTiles[y - 1][x] = true;

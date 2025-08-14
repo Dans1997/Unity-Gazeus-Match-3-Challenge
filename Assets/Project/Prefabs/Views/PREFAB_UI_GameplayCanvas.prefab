@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5551590940820201386}
   - component: {fileID: 8785471912662664211}
   - component: {fileID: 3334328953027612905}
-  - component: {fileID: 5968414053189605408}
   m_Layer: 5
   m_Name: PREFAB_UI_GameplayCanvas
   m_TagString: Untagged
@@ -103,21 +102,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 55
---- !u!114 &5968414053189605408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2928769096254320353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 798450fb7fe04d348a5c6925c8045d26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _boardContainer: {fileID: 291169429251266171}
-  _tilePrefabRepository: {fileID: 11400000, guid: 153eac3747f207a40add49ed6e2dacb9, type: 2}
-  _tileSpotPrefab: {fileID: -4864831497923239132, guid: 6527630aaec5689489d14bfbb482fd0f, type: 3}
 --- !u!1 &3742161843286138856
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,6 +113,7 @@ GameObject:
   - component: {fileID: 5669583453612605783}
   - component: {fileID: 291169429251266171}
   - component: {fileID: 2186389557683259588}
+  - component: {fileID: 6653017991507787055}
   m_Layer: 5
   m_Name: BoardContainer
   m_TagString: Untagged
@@ -193,3 +178,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &6653017991507787055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742161843286138856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 798450fb7fe04d348a5c6925c8045d26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _boardContainer
+      Entry: 6
+      Data: 
+    - Name: _tiles
+      Entry: 6
+      Data: 
+    - Name: _boardCells
+      Entry: 6
+      Data: 
+    - Name: _tilePrefabs
+      Entry: 6
+      Data: 

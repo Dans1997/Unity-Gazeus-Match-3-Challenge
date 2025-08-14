@@ -23,7 +23,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         
         public async UniTask Initialize()
         {
-            mainMenuView = await AssetProvider.InstantiateAsync<MainMenuView>(mainMenuViewKey.ToString());
+            mainMenuView = await AssetProvider.InstantiateAsync<MainMenuView>(mainMenuViewKey);
             mainMenuView.PlayButtonClicked += OnPlayClicked;
             mainMenuView.ExitButtonClicked += OnExitClicked;
         }

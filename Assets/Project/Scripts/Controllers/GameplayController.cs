@@ -7,6 +7,7 @@ using Gazeus.DesafioMatch3.Views;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Controllers
@@ -31,15 +32,17 @@ namespace Gazeus.DesafioMatch3.Controllers
         
         public async UniTask Initialize()
         {
-            BoardView = await AssetProvider.InstantiateAsync<BoardView>(GameplayInfo.GameplayViewPrefabKey.ToString());
+            BoardView = await AssetProvider.InstantiateAsync<BoardView>(GameplayInfo.GameplayViewPrefabKey);
+            var boardCellViewPrefab = await AssetProvider.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
             var board = GameplayService.StartGame(GameplayInfo.BoardWidth, GameplayInfo.BoardHeight);
             
-            BoardView.CreateBoard(board);
+            BoardView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), GameplayInfo.TilePrefabs);
             BoardView.TileClicked += OnTileClick;
         }
         
         public void Dispose()
         {
+            if (BoardView == null) return;
             BoardView.TileClicked -= OnTileClick;
             AssetProvider.Release(BoardView.gameObject);
             BoardView = null;
@@ -58,49 +61,50 @@ namespace Gazeus.DesafioMatch3.Controllers
             if (index < boardSequences.Count)
             {
                 sequence.onComplete += () => AnimateBoard(boardSequences, index, onComplete);
+                return;
             }
-            else
-            {
-                sequence.onComplete += () => onComplete();
-            }
+
+            sequence.onComplete += () => onComplete();
         }
 
-        private void OnTileClick(int x, int y)
+        private void OnTileClick(Vector2Int position)
         {
             if (IsAnimating) return;
 
-            if (SelectedX > -1 && SelectedY > -1)
-            {
-                if (Mathf.Abs(SelectedX - x) + Mathf.Abs(SelectedY - y) > 1)
-                {
-                    SelectedX = -1;
-                    SelectedY = -1;
-                }
-                else
-                {
-                    IsAnimating = true;
-                    BoardView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
-                    {
-                        bool isValid = GameplayService.IsValidMovement(SelectedX, SelectedY, x, y);
-                        if (isValid)
-                        {
-                            List<BoardSequence> swapResult = GameplayService.SwapTile(SelectedX, SelectedY, x, y);
-                            AnimateBoard(swapResult, 0, () => IsAnimating = false);
-                        }
-                        else
-                        {
-                            BoardView.SwapTiles(x, y, SelectedX, SelectedY).onComplete += () => IsAnimating = false;
-                        }
-                        SelectedX = -1;
-                        SelectedY = -1;
-                    };
-                }
-            }
-            else
+            var x = position.x;
+            var y = position.y;
+            
+            if (SelectedX <= -1 || SelectedY <= -1)
             {
                 SelectedX = x;
                 SelectedY = y;
+                return;
             }
+
+            if (Mathf.Abs(SelectedX - x) + Mathf.Abs(SelectedY - y) > 1)
+            {
+                SelectedX = -1;
+                SelectedY = -1;
+                return;
+            }
+
+            IsAnimating = true;
+            BoardView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
+            {
+                var isValid = GameplayService.IsValidMovement(SelectedX, SelectedY, x, y);
+                if (isValid)
+                {
+                    var swapResult = GameplayService.SwapTile(SelectedX, SelectedY, x, y);
+                    AnimateBoard(swapResult, 0, () => IsAnimating = false);
+                }
+                else
+                {
+                    BoardView.SwapTiles(x, y, SelectedX, SelectedY).onComplete += () => IsAnimating = false;
+                }
+
+                SelectedX = -1;
+                SelectedY = -1;
+            };
         }
     }
 }
