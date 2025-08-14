@@ -1,25 +1,34 @@
 ﻿using System;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Gazeus.DesafioMatch3.Views
 {
-    public class TileSpotView : MonoBehaviour
+    public class TileSpotView : SerializedMonoBehaviour
     {
         public event Action<int, int> Clicked;
 
-        [SerializeField] private Button _button;
-
-        private int _x;
-        private int _y;
-
-        #region Unity
+        [OdinSerialize, ReadOnly] private Button _button;
+        [OdinSerialize, ReadOnly] private int _x;
+        [OdinSerialize, ReadOnly] private int _y;
+        
         private void Awake()
+        {
+            _button = GetComponent<Button>();
+        }
+
+        private void Start()
         {
             _button.onClick.AddListener(OnTileClick);
         }
-        #endregion
+
+        private void OnDestroy()
+        {
+            _button.onClick.RemoveListener(OnTileClick);
+        }
 
         public Tween AnimatedSetTile(GameObject tile)
         {

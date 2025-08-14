@@ -1,9 +1,14 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Gazeus.DesafioMatch3.Controllers;
-using Gazeus.DesafioMatch3.Project.Script.Core.Services;
-using Gazeus.DesafioMatch3.ScriptableObjects;
-using Gazeus.DesafioMatch3.Views;
+using Gazeus.DesafioMatch3.Core.Services;
+using Gazeus.DesafioMatch3.Project.Script.Enums;
+using Gazeus.Match3Challenge.Project.Script.Core.Addressables;
+using Gazeus.Match3Challenge.Project.Script.Core.Services;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Configs;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -13,23 +18,28 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
 {
     public class GameInitializationContainer : SerializedMonoBehaviour
     {
-        [Header("Config")]
-        [OdinSerialize] private GameConfig gameConfig;
-
         [Header("Debug")] 
-        [OdinSerialize, ReadOnly] private SceneLoadService _mainMenuSceneLoadService;
-        [OdinSerialize, ReadOnly] private MainMenuController mainMenuController;
-        [OdinSerialize, ReadOnly] private SceneLoadService _gameplaySceneLoadService;
-        [OdinSerialize, ReadOnly] private GameplayController gameplayController;
-
+        [OdinSerialize, ReadOnly] private IGameConfig gameConfig;
+        [OdinSerialize, ReadOnly] private IAssetProvider assetProvider;
+        [OdinSerialize, ReadOnly] private IControllerLoadService controllerLoadService;
+        [OdinSerialize, ReadOnly] private IMainMenuController mainMenuController;
+        [OdinSerialize, ReadOnly] private IGameplayController gameplayController;
+        [OdinSerialize, ReadOnly] private ILoadingScreenController loadingScreenController;
+        
         private async void Start()
         {
             try
             {
                 await Addressables.InitializeAsync().ToUniTask();
-                _mainMenuSceneLoadService = new SceneLoadService(this, gameConfig.MainMenuSceneLoadInfo);
-                _gameplaySceneLoadService = new SceneLoadService(this, gameConfig.GameplaySceneLoadInfo);
-                mainMenuController = await LoadMainMenuScene();
+                assetProvider = new AddressablesAssetProvider();
+                controllerLoadService = new ControllerLoadService();
+                
+                gameConfig = await assetProvider.LoadAssetAsync<IGameConfig>(AddressablesAssetKeys.GameConfigKey);
+                loadingScreenController = await LoadLoadingScreenAsync();
+                
+                await loadingScreenController.Show();
+                mainMenuController = await LoadMainMenuAsync();
+                await loadingScreenController.Hide();
             }
             catch (Exception e)
             {
@@ -40,41 +50,71 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
 
         private void OnDestroy()
         {
-            if (mainMenuController != null)
+            UnloadMainMenu();
+            UnloadGameplay();
+            UnloadLoadingScreen();
+        }
+
+        private async UniTask<IMainMenuController> LoadMainMenuAsync()
+        {
+            return await controllerLoadService.LoadAsync(() =>
             {
-                mainMenuController.PlayRequested -= OnPlayRequested;
-                mainMenuController.ExitRequested -= OnExitRequested;
-                mainMenuController.Dispose();
-            }
+                var controller = new MainMenuController(assetProvider, gameConfig.MainMenuViewKey);
+                controller.PlayRequested += OnPlayRequested;
+                controller.ExitRequested += OnExitRequested;
+                return controller;
+            });
         }
 
-        private async UniTask<MainMenuController> LoadMainMenuScene()
+        private void UnloadMainMenu()
         {
-            await _mainMenuSceneLoadService.LoadSceneAsync();
-
-            var controller = new MainMenuController(FindObjectOfType<MainMenuView>()); // TODO: Replace FindObjectOfType with parameter injection if feasible
-            controller.PlayRequested += OnPlayRequested;
-            controller.ExitRequested += OnExitRequested;
-            return controller;
+            if (mainMenuController == null) return;
+            mainMenuController.PlayRequested -= OnPlayRequested;
+            mainMenuController.ExitRequested -= OnExitRequested;
+            controllerLoadService.Unload(mainMenuController);
         }
 
-        private async UniTask UnloadMainMenuScene()
+        private async UniTask<IGameplayController> LoadGameplayAsync()
         {
-            await _mainMenuSceneLoadService.UnloadSceneAsync();
+            return await controllerLoadService.LoadAsync(() =>
+            {
+                var gameplayService = new GameplayService();
+                var controller = new GameplayController(gameConfig.GameplayInfo, assetProvider, gameplayService);
+                return controller;
+            });
         }
 
-        private async UniTask<GameplayController> LoadGameplayScene()
+        private void UnloadGameplay()
         {
-            await _gameplaySceneLoadService.LoadSceneAsync();
+            if (gameplayController == null) return;
+            controllerLoadService.Unload(gameplayController);
+        }
+        
+        private async UniTask<ILoadingScreenController> LoadLoadingScreenAsync()
+        {
+            return await controllerLoadService.LoadAsync(() =>
+            {
+                var controller = new LoadingScreenScreenController(assetProvider, gameConfig.LoadingScreenViewKey, 
+                    gameConfig.LoadingScreenTransitionDuration);
+                return controller;
+            });
+        }
 
-            var controller = FindObjectOfType<GameplayController>(); // TODO: Replace FindObjectOfType with parameter injection if feasible
-            return controller;
+        private void UnloadLoadingScreen()
+        {
+            if (loadingScreenController == null) return;
+            controllerLoadService.Unload(loadingScreenController);
         }
 
         private async void OnPlayRequested()
         {
-            await UnloadMainMenuScene();
-            gameplayController = await LoadGameplayScene();
+            await loadingScreenController.Show();
+            
+            UnloadMainMenu();
+            gameplayController = await LoadGameplayAsync();
+            
+            await loadingScreenController.Hide();
+            
             // TODO
         }
         

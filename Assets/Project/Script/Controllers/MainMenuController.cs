@@ -1,26 +1,40 @@
 using System;
+using Cysharp.Threading.Tasks;
+using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.DesafioMatch3.Views;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
 
 namespace Gazeus.DesafioMatch3.Controllers
 {
-    public class MainMenuController : IDisposable
+    public class MainMenuController : IMainMenuController
     {
         public event Action PlayRequested;
         public event Action ExitRequested;
+        public IAssetProvider AssetProvider { get; private set; }
+        private readonly MainMenuViewKey mainMenuViewKey;
+        private MainMenuView mainMenuView;
 
-        private readonly MainMenuView view;
-
-        public MainMenuController(MainMenuView view)
+        public MainMenuController(IAssetProvider assetProvider, MainMenuViewKey mainMenuViewKey)
         {
-            this.view = view;
-            view.PlayButtonClicked += OnPlayClicked;
-            view.ExitButtonClicked += OnExitClicked;
+            AssetProvider = assetProvider;
+            this.mainMenuViewKey = mainMenuViewKey;
+        }
+        
+        public async UniTask Initialize()
+        {
+            mainMenuView = await AssetProvider.InstantiateAsync<MainMenuView>(mainMenuViewKey.ToString());
+            mainMenuView.PlayButtonClicked += OnPlayClicked;
+            mainMenuView.ExitButtonClicked += OnExitClicked;
         }
         
         public void Dispose()
         {
-            view.PlayButtonClicked -= OnPlayClicked;
-            view.ExitButtonClicked -= OnExitClicked;
+            if (mainMenuView == null) return;
+            mainMenuView.PlayButtonClicked -= OnPlayClicked;
+            mainMenuView.ExitButtonClicked -= OnExitClicked;
+            AssetProvider.Release(mainMenuView.gameObject);
+            mainMenuView = null;
         }
 
         private void OnPlayClicked()

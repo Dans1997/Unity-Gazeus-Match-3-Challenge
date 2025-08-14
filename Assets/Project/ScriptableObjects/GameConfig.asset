@@ -21,69 +21,27 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: MainMenuSceneLoadInfo
-      Entry: 7
-      Data: Gazeus.DesafioMatch3.Models.SceneLoadInfo, DesafioMatch3
-    - Name: SceneKey
+    - Name: MainMenuViewKey
       Entry: 3
       Data: 0
-    - Name: LoadSceneParameters
-      Entry: 7
-      Data: UnityEngine.SceneManagement.LoadSceneParameters, UnityEngine.CoreModule
-    - Name: m_LoadSceneMode
-      Entry: 3
-      Data: 1
-    - Name: m_LocalPhysicsMode
+    - Name: LoadingScreenViewKey
       Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: UseLoadingScreen
-      Entry: 5
-      Data: true
-    - Name: LoadingScreenKey
-      Entry: 3
-      Data: 2
-    - Name: CancellationToken
+    - Name: LoadingScreenTransitionDuration
+      Entry: 4
+      Data: 0.5
+    - Name: GameplayInfo
       Entry: 7
-      Data: System.Threading.CancellationToken, mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: GameplaySceneLoadInfo
-      Entry: 7
-      Data: Gazeus.DesafioMatch3.Models.SceneLoadInfo, DesafioMatch3
-    - Name: SceneKey
+      Data: Gazeus.DesafioMatch3.Models.GameplayInfo, Match3Challenge
+    - Name: BoardHeight
       Entry: 3
-      Data: 1
-    - Name: LoadSceneParameters
-      Entry: 7
-      Data: UnityEngine.SceneManagement.LoadSceneParameters, UnityEngine.CoreModule
-    - Name: m_LoadSceneMode
+      Data: 10
+    - Name: BoardWidth
       Entry: 3
-      Data: 1
-    - Name: m_LocalPhysicsMode
+      Data: 10
+    - Name: GameplayViewPrefabKey
       Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: UseLoadingScreen
-      Entry: 5
-      Data: true
-    - Name: LoadingScreenKey
-      Entry: 3
-      Data: 2
-    - Name: CancellationToken
-      Entry: 7
-      Data: System.Threading.CancellationToken, mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 8
       Data: 

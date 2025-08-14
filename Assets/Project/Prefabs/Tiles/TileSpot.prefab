@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -50,7 +49,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602df2ee67ba9e14aa7fb2c07eb9988c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 3397252726085345414}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _button
+      Entry: 6
+      Data: 
+    - Name: _x
+      Entry: 3
+      Data: 0
+    - Name: _y
+      Entry: 3
+      Data: 0
 --- !u!114 &3397252726085345414
 MonoBehaviour:
   m_ObjectHideFlags: 0

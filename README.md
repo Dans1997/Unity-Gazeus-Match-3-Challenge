@@ -167,5 +167,21 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
   * **Development Notes**: followed SOLID principles (lacking interfaces), dependency injection, async/await with UniTask, and decoupled controllers, views, and scene loading.
   * **Known Limitations**: gameplay initialization is placeholder; loading screens have fixed delay; assumes single instance of view/controller per scene.
 
+### **Day 2 — Extendable Scoring System**
+* **Prefab-Based UI for DI**: Switched MainMenu and LoadingScreen to addressable prefabs to remove scene refs and ease dependency injection.
+* **Addressables Provider**: Added AddressablesAssetProvider (LoadAssetAsync/InstantiateAsync/Release) used across controllers.
+* **Initialization Flow**: Implemented GameInitializationContainer to init Addressables, create services, load GameConfig, and bootstrap UI.
+* **Loading Screen Controller**: Added LoadingScreenScreenController with async CanvasGroup fade (Show/Hide) and addressable instantiation.
+* **Main Menu Controller**: Added MainMenuController that instantiates MainMenuView via enum key and raises Play/Exit events.
+* **Gameplay Controller Refactor**: Introduced pure GameplayController (no MonoBehaviour) that spawns BoardView prefab and wires tile events.
+* **Controller Lifecycle Service**: Added ControllerLoadService to standardize controller Initialize/Dispose across the app.
+* **Gameplay Service Extraction**: Moved match-3 logic into GameplayService implementing IGameplayService (StartGame/IsValidMovement/SwapTile).
+* **Config Access**: Introduced AddressablesAssetKeys.GameConfigKey and loading of IGameConfig from Addressables during startup.
+* **Enum Keys**: Created GameplayViewKey, MainMenuViewKey, LoadingScreenViewKey, SceneKey for type-safe addressable lookups.
+* **View Utility**: Added LoadingScreenView with cached CanvasGroup for fades.
+* **Cleanup & Safety**: Ensured event unsubscription and Addressables.Release in Dispose paths for all instantiated views.
+* **Scoring Stubs**: Added placeholder interfaces (IScoreCalculator/IScoreRule/IScoreService) with TODOs; no scoring implementation yet.
+
+
 *(Future days will detail added features, fixes, and design choices.)*
 

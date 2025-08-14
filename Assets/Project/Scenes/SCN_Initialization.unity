@@ -261,17 +261,25 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 9e2a34af96e3f2b4bb7ee917e3903cda, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: gameConfig
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: _mainMenuSceneLoadService
+      Entry: 6
+      Data: 
     - Name: mainMenuController
+      Entry: 6
+      Data: 
+    - Name: _gameplaySceneLoadService
+      Entry: 6
+      Data: 
+    - Name: gameplayController
       Entry: 6
       Data: 
 --- !u!1 &1533040084

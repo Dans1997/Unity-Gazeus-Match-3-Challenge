@@ -127,12 +127,10 @@ namespace Gazeus.DesafioMatch3.Views
 
             return sequence;
         }
-
-        #region Events
+        
         private void TileSpot_Clicked(int x, int y)
         {
             TileClicked(x, y);
         }
-        #endregion
     }
 }

@@ -1,24 +1,25 @@
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Core.Services
 {
-    public class GameplayService
+    public class GameplayService : IGameplayService
     {
-        private List<List<Tile>> _boardTiles;
-        private List<int> _tilesTypes;
-        private int _tileCount;
+        public List<List<Tile>> BoardTiles { get; private set; }
+        public List<int> TilesTypes { get; private set; }
+        public int TileCount { get; private set; }
 
         public bool IsValidMovement(int fromX, int fromY, int toX, int toY)
         {
-            List<List<Tile>> newBoard = CopyBoard(_boardTiles);
+            var newBoard = CopyBoard(BoardTiles);
 
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
-            for (int y = 0; y < newBoard.Count; y++)
+            for (var y = 0; y < newBoard.Count; y++)
             {
-                for (int x = 0; x < newBoard[y].Count; x++)
+                for (var x = 0; x < newBoard[y].Count; x++)
                 {
                     if (x > 1 &&
                         newBoard[y][x].Type == newBoard[y][x - 1].Type &&
@@ -41,95 +42,84 @@ namespace Gazeus.DesafioMatch3.Core.Services
 
         public List<List<Tile>> StartGame(int boardWidth, int boardHeight)
         {
-            _tilesTypes = new List<int> { 0, 1, 2, 3 };
-            _boardTiles = CreateBoard(boardWidth, boardHeight, _tilesTypes);
+            TilesTypes = new List<int> { 0, 1, 2, 3 };
+            BoardTiles = CreateBoard(boardWidth, boardHeight, TilesTypes);
 
-            return _boardTiles;
+            return BoardTiles;
         }
 
         public List<BoardSequence> SwapTile(int fromX, int fromY, int toX, int toY)
         {
-            List<List<Tile>> newBoard = CopyBoard(_boardTiles);
+            var newBoard = CopyBoard(BoardTiles);
 
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            List<List<bool>> matchedTiles = FindMatches(newBoard);
+            var matchedTiles = FindMatches(newBoard);
 
             while (HasMatch(matchedTiles))
             {
-                //Cleaning the matched tiles
                 List<Vector2Int> matchedPosition = new();
-                for (int y = 0; y < newBoard.Count; y++)
+                for (var y = 0; y < newBoard.Count; y++)
                 {
-                    for (int x = 0; x < newBoard[y].Count; x++)
+                    for (var x = 0; x < newBoard[y].Count; x++)
                     {
-                        if (matchedTiles[y][x])
-                        {
-                            matchedPosition.Add(new Vector2Int(x, y));
-                            newBoard[y][x] = new Tile { Id = -1, Type = -1 };
-                        }
+                        if (!matchedTiles[y][x]) continue;
+                        matchedPosition.Add(new Vector2Int(x, y));
+                        newBoard[y][x] = new Tile { Id = -1, Type = -1 };
                     }
                 }
 
-                // Dropping the tiles
                 Dictionary<int, MovedTileInfo> movedTiles = new();
                 List<MovedTileInfo> movedTilesList = new();
-                for (int i = 0; i < matchedPosition.Count; i++)
+                for (var i = 0; i < matchedPosition.Count; i++)
                 {
-                    int x = matchedPosition[i].x;
-                    int y = matchedPosition[i].y;
+                    var x = matchedPosition[i].x;
+                    var y = matchedPosition[i].y;
                     if (y > 0)
                     {
-                        for (int j = y; j > 0; j--)
+                        for (var j = y; j > 0; j--)
                         {
-                            Tile movedTile = newBoard[j - 1][x];
+                            var movedTile = newBoard[j - 1][x];
                             newBoard[j][x] = movedTile;
-                            if (movedTile.Type > -1)
+                            if (movedTile.Type <= -1) continue;
+                            
+                            if (movedTiles.TryGetValue(movedTile.Id, out var tile))
                             {
-                                if (movedTiles.ContainsKey(movedTile.Id))
+                                tile.To = new Vector2Int(x, j);
+                            }
+                            else
+                            {
+                                MovedTileInfo movedTileInfo = new()
                                 {
-                                    movedTiles[movedTile.Id].To = new Vector2Int(x, j);
-                                }
-                                else
-                                {
-                                    MovedTileInfo movedTileInfo = new()
-                                    {
-                                        From = new Vector2Int(x, j - 1),
-                                        To = new Vector2Int(x, j)
-                                    };
-                                    movedTiles.Add(movedTile.Id, movedTileInfo);
-                                    movedTilesList.Add(movedTileInfo);
-                                }
+                                    From = new Vector2Int(x, j - 1),
+                                    To = new Vector2Int(x, j)
+                                };
+                                movedTiles.Add(movedTile.Id, movedTileInfo);
+                                movedTilesList.Add(movedTileInfo);
                             }
                         }
 
-                        newBoard[0][x] = new Tile
-                        {
-                            Id = -1,
-                            Type = -1
-                        };
+                        newBoard[0][x] = new Tile { Id = -1, Type = -1 };
                     }
                 }
 
-                // Filling the board
                 List<AddedTileInfo> addedTiles = new();
-                for (int y = newBoard.Count - 1; y > -1; y--)
+                for (var y = newBoard.Count - 1; y > -1; y--)
                 {
-                    for (int x = newBoard[y].Count - 1; x > -1; x--)
+                    for (var x = newBoard[y].Count - 1; x > -1; x--)
                     {
-                        if (newBoard[y][x].Type == -1)
+                        if (newBoard[y][x].Type != -1) continue;
+                        
+                        var tileType = Random.Range(0, TilesTypes.Count);
+                        var tile = newBoard[y][x];
+                        tile.Id = TileCount++;
+                        tile.Type = TilesTypes[tileType];
+                        addedTiles.Add(new AddedTileInfo
                         {
-                            int tileType = Random.Range(0, _tilesTypes.Count);
-                            Tile tile = newBoard[y][x];
-                            tile.Id = _tileCount++;
-                            tile.Type = _tilesTypes[tileType];
-                            addedTiles.Add(new AddedTileInfo
-                            {
-                                Position = new Vector2Int(x, y),
-                                Type = tile.Type
-                            });
-                        }
+                            Position = new Vector2Int(x, y),
+                            Type = tile.Type
+                        });
                     }
                 }
 
@@ -143,7 +133,7 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 matchedTiles = FindMatches(newBoard);
             }
 
-            _boardTiles = newBoard;
+            BoardTiles = newBoard;
 
             return boardSequences;
         }
@@ -151,12 +141,12 @@ namespace Gazeus.DesafioMatch3.Core.Services
         private static List<List<Tile>> CopyBoard(List<List<Tile>> boardToCopy)
         {
             List<List<Tile>> newBoard = new(boardToCopy.Count);
-            for (int y = 0; y < boardToCopy.Count; y++)
+            for (var y = 0; y < boardToCopy.Count; y++)
             {
                 newBoard.Add(new List<Tile>(boardToCopy[y].Count));
-                for (int x = 0; x < boardToCopy[y].Count; x++)
+                for (var x = 0; x < boardToCopy[y].Count; x++)
                 {
-                    Tile tile = boardToCopy[y][x];
+                    var tile = boardToCopy[y][x];
                     newBoard[y].Add(new Tile { Id = tile.Id, Type = tile.Type });
                 }
             }
@@ -167,39 +157,34 @@ namespace Gazeus.DesafioMatch3.Core.Services
         private List<List<Tile>> CreateBoard(int width, int height, List<int> tileTypes)
         {
             List<List<Tile>> board = new(height);
-            _tileCount = 0;
-            for (int y = 0; y < height; y++)
+            TileCount = 0;
+
+            for (var y = 0; y < height; y++)
             {
                 board.Add(new List<Tile>(width));
-                for (int x = 0; x < width; x++)
+                for (var x = 0; x < width; x++)
                 {
                     board[y].Add(new Tile { Id = -1, Type = -1 });
                 }
             }
 
-            for (int y = 0; y < height; y++)
+            for (var y = 0; y < height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (var x = 0; x < width; x++)
                 {
                     List<int> noMatchTypes = new(tileTypes.Count);
-                    for (int i = 0; i < tileTypes.Count; i++)
+                    for (var i = 0; i < tileTypes.Count; i++)
                     {
-                        noMatchTypes.Add(_tilesTypes[i]);
+                        noMatchTypes.Add(TilesTypes[i]);
                     }
 
-                    if (x > 1 &&
-                        board[y][x - 1].Type == board[y][x - 2].Type)
-                    {
+                    if (x > 1 && board[y][x - 1].Type == board[y][x - 2].Type)
                         noMatchTypes.Remove(board[y][x - 1].Type);
-                    }
 
-                    if (y > 1 &&
-                        board[y - 1][x].Type == board[y - 2][x].Type)
-                    {
+                    if (y > 1 && board[y - 1][x].Type == board[y - 2][x].Type)
                         noMatchTypes.Remove(board[y - 1][x].Type);
-                    }
 
-                    board[y][x].Id = _tileCount++;
+                    board[y][x].Id = TileCount++;
                     board[y][x].Type = noMatchTypes[Random.Range(0, noMatchTypes.Count)];
                 }
             }
@@ -210,18 +195,18 @@ namespace Gazeus.DesafioMatch3.Core.Services
         private static List<List<bool>> FindMatches(List<List<Tile>> newBoard)
         {
             List<List<bool>> matchedTiles = new();
-            for (int y = 0; y < newBoard.Count; y++)
+            for (var y = 0; y < newBoard.Count; y++)
             {
                 matchedTiles.Add(new List<bool>(newBoard[y].Count));
-                for (int x = 0; x < newBoard.Count; x++)
+                for (var x = 0; x < newBoard[y].Count; x++)
                 {
                     matchedTiles[y].Add(false);
                 }
             }
 
-            for (int y = 0; y < newBoard.Count; y++)
+            for (var y = 0; y < newBoard.Count; y++)
             {
-                for (int x = 0; x < newBoard[y].Count; x++)
+                for (var x = 0; x < newBoard[y].Count; x++)
                 {
                     if (x > 1 &&
                         newBoard[y][x].Type == newBoard[y][x - 1].Type &&
@@ -248,14 +233,11 @@ namespace Gazeus.DesafioMatch3.Core.Services
 
         private static bool HasMatch(List<List<bool>> list)
         {
-            for (int y = 0; y < list.Count; y++)
+            for (var y = 0; y < list.Count; y++)
             {
-                for (int x = 0; x < list[y].Count; x++)
+                for (var x = 0; x < list[y].Count; x++)
                 {
-                    if (list[y][x])
-                    {
-                        return true;
-                    }
+                    if (list[y][x]) return true;
                 }
             }
 
