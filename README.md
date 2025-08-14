@@ -150,13 +150,22 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
   * **Config-Driven Tuning**: `BoardConfig` (`ScriptableObject`) for board size, tile set, spawn weights, gravity, cascade limits, target FPS/platform.
   * **Testing**: Pure C# tests for `FindMatches`, gravity, spawn rules, and deterministic seeds.
 
-### **Initial Setup**
+### **Implementation**
 
 * Forked the base repository.
 * Created `development` branch for new features.
 * Wrote initial README and challenge breakdown/planning.
 * Installed `Addressables`, `UniTask`, `LeanPool` and `OdinInspector`.
 * Created initial scene files.
+* Implemented initial scene injection system.
+  * **Scenes**: created Initialization, Main Menu, and Gameplay scenes; Initialization handles bootstrapping and scene transitions.
+  * **GameInitializationContainer**: implemented container to initialize Addressables, load `GameConfig`, and manage scene loading/unloading for Main Menu and Gameplay.
+  * **LoadSceneService**: added a service for async scene loading/unloading via Addressables, supporting loading screens, enums for scene keys, and error handling.
+  * **MainMenuController**: implemented controller connecting `MainMenuView` events to `PlayRequested` and `ExitRequested` events.
+  * **MainMenuView**: created serialized buttons with events (`PlayButtonClicked`, `ExitButtonClicked`).
+  * **Configuration**: added `GameConfig` ScriptableObject with `SceneLoadInfo` for Main Menu and Gameplay; enums used instead of strings for scene keys.
+  * **Development Notes**: followed SOLID principles (lacking interfaces), dependency injection, async/await with UniTask, and decoupled controllers, views, and scene loading.
+  * **Known Limitations**: gameplay initialization is placeholder; loading screens have fixed delay; assumes single instance of view/controller per scene.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

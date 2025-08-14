@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using UnityEngine;
 
-namespace Gazeus.DesafioMatch3.Core
+namespace Gazeus.DesafioMatch3.Core.Services
 {
-    public class GameService
+    public class GameplayService
     {
         private List<List<Tile>> _boardTiles;
         private List<int> _tilesTypes;

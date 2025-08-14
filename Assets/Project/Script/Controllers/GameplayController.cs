@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using Gazeus.DesafioMatch3.Core;
+using Gazeus.DesafioMatch3.Core.Services;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Views;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Controllers
 {
-    public class GameController : MonoBehaviour
+    public class GameplayController : MonoBehaviour
     {
         [SerializeField] private BoardView _boardView;
         [SerializeField] private int _boardHeight = 10;
         [SerializeField] private int _boardWidth = 10;
 
-        private GameService _gameEngine;
+        private GameplayService _gameplayEngine;
         private bool _isAnimating;
         private int _selectedX = -1;
         private int _selectedY = -1;
@@ -22,7 +22,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         #region Unity
         private void Awake()
         {
-            _gameEngine = new GameService();
+            _gameplayEngine = new GameplayService();
             _boardView.TileClicked += OnTileClick;
         }
 
@@ -33,7 +33,7 @@ namespace Gazeus.DesafioMatch3.Controllers
 
         private void Start()
         {
-            List<List<Tile>> board = _gameEngine.StartGame(_boardWidth, _boardHeight);
+            List<List<Tile>> board = _gameplayEngine.StartGame(_boardWidth, _boardHeight);
             _boardView.CreateBoard(board);
         }
         #endregion
@@ -74,10 +74,10 @@ namespace Gazeus.DesafioMatch3.Controllers
                     _isAnimating = true;
                     _boardView.SwapTiles(_selectedX, _selectedY, x, y).onComplete += () =>
                     {
-                        bool isValid = _gameEngine.IsValidMovement(_selectedX, _selectedY, x, y);
+                        bool isValid = _gameplayEngine.IsValidMovement(_selectedX, _selectedY, x, y);
                         if (isValid)
                         {
-                            List<BoardSequence> swapResult = _gameEngine.SwapTile(_selectedX, _selectedY, x, y);
+                            List<BoardSequence> swapResult = _gameplayEngine.SwapTile(_selectedX, _selectedY, x, y);
                             AnimateBoard(swapResult, 0, () => _isAnimating = false);
                         }
                         else
