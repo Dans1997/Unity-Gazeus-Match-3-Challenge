@@ -166,7 +166,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
   * **Development Notes**: followed SOLID principles (lacking interfaces), dependency injection, async/await with UniTask, and decoupled controllers, views, and scene loading.
   * **Known Limitations**: gameplay initialization is placeholder; loading screens have fixed delay; assumes single instance of view/controller per scene.
 
-### **Day 2 — Extendable Scoring System**
+### **Day 2 (Aug 14th) — Codebase Preparation**
 * **Prefab-Based UI for DI**: Switched MainMenu and LoadingScreen to addressable prefabs to remove scene refs and ease dependency injection.
 * **Addressables Provider**: Added AddressablesAssetProvider (LoadAssetAsync/InstantiateAsync/Release) used across controllers.
 * **Initialization Flow**: Implemented GameInitializationContainer to init Addressables, create services, load GameConfig, and bootstrap UI.
@@ -191,6 +191,9 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **Tile Movement & Swap**:  BoardView.MoveTiles and SwapTiles updated to animate tiles between BoardCellViews using AnimatedSetTile, keeping _tiles state consistent.
 * **LeanPool Integration**:  Replaced direct Instantiate/Destroy calls with LeanPool.Spawn/Despawn for efficient tile and board cell reuse.
 * **TODOs Maintained**:  TileInfo still has placeholder properties for BackgroundColor and Icon; scoring system still not implemented.
+
+### **Day 3 (Aug 15th) — Extendable Scoring System**
+* **Tile Prefab Injection**: Switched to runtime async prefab loading (`AvailableTileKeys[]`) to avoid holding direct tile prefab references since system startup.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

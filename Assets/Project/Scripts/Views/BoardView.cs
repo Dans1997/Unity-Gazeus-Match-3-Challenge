@@ -18,19 +18,19 @@ namespace Gazeus.DesafioMatch3.Views
         [OdinSerialize, ReadOnly] private GridLayoutGroup _boardContainer;
         [OdinSerialize, ReadOnly] private GameObject[][] _tiles;
         [OdinSerialize, ReadOnly] private IBoardCellView[][] _boardCells;
-        [OdinSerialize, ReadOnly] private GameObject[] _tilePrefabs;
+        [OdinSerialize, ReadOnly] private TilePrefabInfo[] _tilePrefabs;
 
         private void Awake()
         {
             _boardContainer = GetComponent<GridLayoutGroup>();
         }
 
-        public void CreateBoard(List<List<TileInfo>> board, IBoardCellView boardCellPrefab, GameObject[] tilePrefabs)
+        public void CreateBoard(List<List<TileInfo>> board, IBoardCellView boardCellPrefab, TilePrefabInfo[] tiles)
         {
             _boardContainer.constraintCount = board[0].Count;
             _tiles = new GameObject[board.Count][];
             _boardCells = new IBoardCellView[board.Count][];
-            _tilePrefabs = tilePrefabs;
+            _tilePrefabs = tiles;
 
             for (var y = 0; y < board.Count; y++)
             {
@@ -49,7 +49,7 @@ namespace Gazeus.DesafioMatch3.Views
                     var tileTypeIndex = (int) board[y][x].Key;
                     if (tileTypeIndex <= -1) continue;
                     
-                    var tilePrefab = tilePrefabs[tileTypeIndex];
+                    var tilePrefab = tiles[tileTypeIndex].Prefab;
                     var tile = LeanPool.Spawn(tilePrefab);
                     boardCell.SetTile(tile.transform);
 
@@ -66,7 +66,7 @@ namespace Gazeus.DesafioMatch3.Views
                 var addedTileInfo = addedTiles[i];
                 var position = addedTileInfo.Position;
                 var boardCell = _boardCells[position.y][position.x];
-                var tilePrefab = _tilePrefabs[(int)addedTileInfo.Key];
+                var tilePrefab = _tilePrefabs[(int)addedTileInfo.Key].Prefab;
                 var tile = LeanPool.Spawn(tilePrefab);
                 boardCell.SetTile(tile.transform);
 

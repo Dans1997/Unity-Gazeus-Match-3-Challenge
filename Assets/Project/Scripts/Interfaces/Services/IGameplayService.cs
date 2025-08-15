@@ -8,8 +8,8 @@ namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Services
         List<List<TileInfo>> BoardTiles { get; }
         int TileCount { get; }
         
+        List<List<TileInfo>> StartGame(GameplayInfo gameplayInfo);
         bool IsValidMovement(int fromX, int fromY, int toX, int toY);
-        List<List<TileInfo>> StartGame(int boardWidth, int boardHeight);
         List<BoardSequence> SwapTile(int fromX, int fromY, int toX, int toY);
     }
 }

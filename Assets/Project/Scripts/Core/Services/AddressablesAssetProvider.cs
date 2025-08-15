@@ -29,6 +29,23 @@ namespace Gazeus.Match3Challenge.Project.Script.Core.Addressables
             }
         }
 
+        public async UniTask<T[]> LoadAssetsAsync<TEnum, T>(TEnum[] keys)
+        {
+            if (keys == null || keys.Length == 0)
+            {
+                throw new ArgumentException("Keys array cannot be null or empty.", nameof(keys));
+            }
+
+            var tasks = new UniTask<T>[keys.Length];
+
+            for (var i = 0; i < keys.Length; i++)
+            {
+                tasks[i] = LoadAssetAsync<T>(keys[i].ToString());
+            }
+
+            return await UniTask.WhenAll(tasks);
+        }
+
         public UniTask<T> LoadAssetAsync<T>(Enum key)
         {
             return LoadAssetAsync<T>(key.ToString());

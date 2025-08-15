@@ -18,37 +18,37 @@ MonoBehaviour:
   m_GUID: b053138b65e5e104cb36fcb02924043a
   m_SerializeEntries:
   - m_GUID: 21d43d9bcb34c784aba98010c0ad6084
-    m_Address: Assets/Project/Prefabs/Tiles/RedTile.prefab
+    m_Address: RedTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 46f0c7ed21cef764296d7c156b96da85
-    m_Address: Assets/Project/Prefabs/Tiles/YellowTile.prefab
+    m_Address: YellowTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 90b6f1c7b50730c47ba7294b1f2bbbd4
-    m_Address: Assets/Project/Prefabs/Tiles/PurpleTile.prefab
+    m_Address: PurpleTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a6fb14bf42a1f2d46ab2f40ba89df970
-    m_Address: Assets/Project/Prefabs/Tiles/BlueTile.prefab
+    m_Address: BlueTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dbb3cd93728abaa43a394a4320380812
-    m_Address: Assets/Project/Prefabs/Tiles/PinkTile.prefab
+    m_Address: PinkTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc3453aa1a3bbbd46aa72555404acfd6
-    m_Address: Assets/Project/Prefabs/Tiles/OrangeTile.prefab
+    m_Address: OrangeTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e79087baeae77814fb7d024ccc13c2a6
-    m_Address: Assets/Project/Prefabs/Tiles/GreenTile.prefab
+    m_Address: GreenTile
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

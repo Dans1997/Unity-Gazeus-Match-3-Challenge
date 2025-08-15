@@ -15,14 +15,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 6588062894895293356, guid: a6fb14bf42a1f2d46ab2f40ba89df970, type: 3}
-    - {fileID: 3289974818467498821, guid: e79087baeae77814fb7d024ccc13c2a6, type: 3}
-    - {fileID: 4679404501436794767, guid: dc3453aa1a3bbbd46aa72555404acfd6, type: 3}
-    - {fileID: 8811796958392367493, guid: dbb3cd93728abaa43a394a4320380812, type: 3}
-    - {fileID: 3248726331797900192, guid: 90b6f1c7b50730c47ba7294b1f2bbbd4, type: 3}
-    - {fileID: 5683098699188789233, guid: 21d43d9bcb34c784aba98010c0ad6084, type: 3}
-    - {fileID: 8131021523737363015, guid: 46f0c7ed21cef764296d7c156b96da85, type: 3}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -52,33 +45,24 @@ MonoBehaviour:
     - Name: BoardCellViewPrefabKey
       Entry: 3
       Data: 0
-    - Name: TilePrefabs
+    - Name: AvailableTiles
       Entry: 7
-      Data: 0|UnityEngine.GameObject[], UnityEngine.CoreModule
+      Data: 0|Gazeus.DesafioMatch3.Project.Script.Enums.TileKey[], Match3Challenge
     - Name: 
       Entry: 12
-      Data: 7
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 10
       Data: 4
     - Name: 
-      Entry: 10
-      Data: 5
+      Entry: 3
+      Data: 0
     - Name: 
-      Entry: 10
-      Data: 6
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 3
     - Name: 
       Entry: 13
       Data: 

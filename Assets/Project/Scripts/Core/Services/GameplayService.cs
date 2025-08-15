@@ -43,10 +43,10 @@ namespace Gazeus.DesafioMatch3.Core.Services
             return false;
         }
 
-        public List<List<TileInfo>> StartGame(int boardWidth, int boardHeight)
+        public List<List<TileInfo>> StartGame(GameplayInfo gameplayInfo)
         {
-            TilesTypes = (TileKey[]) Enum.GetValues(typeof(TileKey));
-            BoardTiles = CreateBoard(boardWidth, boardHeight, TilesTypes);
+            TilesTypes = gameplayInfo.AvailableTileKeys;
+            BoardTiles = CreateBoard(gameplayInfo.BoardWidth, gameplayInfo.BoardHeight, TilesTypes);
 
             return BoardTiles;
         }

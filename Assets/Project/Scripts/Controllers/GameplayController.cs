@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.DesafioMatch3.Views;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Gazeus.DesafioMatch3.Controllers
 {
@@ -34,9 +37,10 @@ namespace Gazeus.DesafioMatch3.Controllers
         {
             BoardView = await AssetProvider.InstantiateAsync<BoardView>(GameplayInfo.GameplayViewPrefabKey);
             var boardCellViewPrefab = await AssetProvider.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
-            var board = GameplayService.StartGame(GameplayInfo.BoardWidth, GameplayInfo.BoardHeight);
+            var board = GameplayService.StartGame(GameplayInfo);
+            var preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
             
-            BoardView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), GameplayInfo.TilePrefabs);
+            BoardView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
             BoardView.TileClicked += OnTileClick;
         }
         
@@ -105,6 +109,21 @@ namespace Gazeus.DesafioMatch3.Controllers
                 SelectedX = -1;
                 SelectedY = -1;
             };
+        }
+        
+        private async UniTask<TilePrefabInfo[]> LoadTilesAsync(TileKey[] keys)
+        {
+            var maxIndex = keys.Max(k => (int)k);
+            var entries = new TilePrefabInfo[maxIndex + 1];
+            var prefabs = await AssetProvider.LoadAssetsAsync<TileKey, GameObject>(keys);
+            
+            for (var i = 0; i < keys.Length; i++)
+            {
+                var key = keys[i];
+                entries[(int)key] = new TilePrefabInfo(key, prefabs[i]);
+            }
+
+            return entries;
         }
     }
 }
