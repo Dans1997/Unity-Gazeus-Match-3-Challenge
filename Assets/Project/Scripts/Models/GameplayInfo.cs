@@ -12,5 +12,6 @@ namespace Gazeus.DesafioMatch3.Models
         [OdinSerialize] public GameplayViewKey GameplayViewPrefabKey { get; private set; }
         [OdinSerialize] public BoardCellViewKey BoardCellViewPrefabKey { get; private set; }
         [OdinSerialize] public TileKey[] AvailableTileKeys { get; private set; } // TODO: This allows duplicates
+        [OdinSerialize] public BoardVisualConfig BoardVisualConfig { get; private set; }
     }
 }

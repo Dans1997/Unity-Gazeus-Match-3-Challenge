@@ -10,14 +10,26 @@ namespace Gazeus.DesafioMatch3.Views
 {
     public class BoardCellView : SerializedMonoBehaviour, IBoardCellView
     {
-        public event Action<Vector2Int> Clicked;
-        public Transform Transform => transform;
+        public event Action<IBoardCellView> Clicked;
+
+        [OdinSerialize, ReadOnly] public Transform Transform => transform;
+        [OdinSerialize, ReadOnly] public Vector2Int Position { get; private set; }
         
         [OdinSerialize, ReadOnly] private Button _button;
-        [OdinSerialize, ReadOnly] private Vector2Int _position;
+        [OdinSerialize, ReadOnly] private Image _image;
+
+        private void Awake()
+        {
+            _button = GetComponentInChildren<Button>();
+            _image = GetComponentInChildren<Image>();
+        }
+
+        private void Start()
+        {
+            _button.onClick.AddListener(OnTileClick);
+            SetSelected(false);
+        }
         
-        private void Awake() => _button = GetComponent<Button>();
-        private void Start() => _button.onClick.AddListener(OnTileClick);
         private void OnDestroy() => _button.onClick.RemoveListener(OnTileClick);
 
         public Tween AnimatedSetTile(Transform tileTransform)
@@ -28,7 +40,8 @@ namespace Gazeus.DesafioMatch3.Views
             return tileTransform.DOMove(transform.position, 0.3f);
         }
         
-        public void SetPosition(Vector2Int position) => _position = position;
+        public void SetPosition(Vector2Int position) => Position = position;
+        public void SetSelected(bool selected) => _image.enabled = selected;
 
         public void SetTile(Transform tileTransform)
         {
@@ -36,6 +49,6 @@ namespace Gazeus.DesafioMatch3.Views
             tileTransform.position = transform.position;
         }
 
-        private void OnTileClick() => Clicked?.Invoke(_position);
+        private void OnTileClick() => Clicked?.Invoke(this);
     }
 }

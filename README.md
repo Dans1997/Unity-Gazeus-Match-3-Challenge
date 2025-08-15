@@ -194,6 +194,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 
 ### **Day 3 (Aug 15th) — Extendable Scoring System**
 * **Tile Prefab Injection**: Switched to runtime async prefab loading (`AvailableTileKeys[]`) to avoid holding direct tile prefab references since system startup.
+* **Tile Selection Feedback**: Added some visual QoL improvements to tile selection and game board. This will make testing mechanics later much easier.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

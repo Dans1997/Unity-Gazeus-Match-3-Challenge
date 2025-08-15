@@ -11,7 +11,6 @@ using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Gazeus.DesafioMatch3.Controllers
 {
@@ -21,9 +20,10 @@ namespace Gazeus.DesafioMatch3.Controllers
         public IAssetProvider AssetProvider { get; private set; }
         public IGameplayService GameplayService { get; private set; }
         public BoardView BoardView { get; private set; }
+        public IBoardCellView SelectedCellView { get; private set; }
         public bool IsAnimating { get; private set; }
-        public int SelectedX { get; private set; }
-        public int SelectedY { get; private set; }
+        public int SelectedX => SelectedCellView?.Position.x ?? -1;
+        public int SelectedY => SelectedCellView?.Position.y ?? -1;
         
         public GameplayController(GameplayInfo gameplayInfo, IAssetProvider assetProvider,
             IGameplayService gameplayService)
@@ -40,6 +40,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             var board = GameplayService.StartGame(GameplayInfo);
             var preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
             
+            BoardView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, board[0].Count);
             BoardView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
             BoardView.TileClicked += OnTileClick;
         }
@@ -71,27 +72,27 @@ namespace Gazeus.DesafioMatch3.Controllers
             sequence.onComplete += () => onComplete();
         }
 
-        private void OnTileClick(Vector2Int position)
+        private void OnTileClick(IBoardCellView clickedCellView)
         {
             if (IsAnimating) return;
 
-            var x = position.x;
-            var y = position.y;
+            var x = clickedCellView.Position.x;
+            var y = clickedCellView.Position.y;
             
-            if (SelectedX <= -1 || SelectedY <= -1)
+            if (SelectedCellView == null)
             {
-                SelectedX = x;
-                SelectedY = y;
+                SelectBoardCellView(clickedCellView);
                 return;
             }
 
             if (Mathf.Abs(SelectedX - x) + Mathf.Abs(SelectedY - y) > 1)
             {
-                SelectedX = -1;
-                SelectedY = -1;
+                DeselectBoardCellView();
                 return;
             }
-
+            
+            SelectedCellView?.SetSelected(false);
+            
             IsAnimating = true;
             BoardView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
             {
@@ -106,11 +107,23 @@ namespace Gazeus.DesafioMatch3.Controllers
                     BoardView.SwapTiles(x, y, SelectedX, SelectedY).onComplete += () => IsAnimating = false;
                 }
 
-                SelectedX = -1;
-                SelectedY = -1;
+                DeselectBoardCellView();
             };
         }
-        
+
+        private void SelectBoardCellView(IBoardCellView boardCellView)
+        {
+            SelectedCellView = boardCellView;
+            SelectedCellView?.SetSelected(true);
+            Debug.Log($"[GaneplayController] Tile {boardCellView.Position} selected");
+        }
+
+        private void DeselectBoardCellView()
+        {
+            SelectedCellView?.SetSelected(false);
+            SelectedCellView = null;
+        }
+
         private async UniTask<TilePrefabInfo[]> LoadTilesAsync(TileKey[] keys)
         {
             var maxIndex = keys.Max(k => (int)k);

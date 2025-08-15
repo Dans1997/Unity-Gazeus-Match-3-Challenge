@@ -13,7 +13,7 @@ namespace Gazeus.DesafioMatch3.Views
 {
     public class BoardView : SerializedMonoBehaviour
     {
-        public event Action<Vector2Int> TileClicked;
+        public event Action<IBoardCellView> TileClicked;
 
         [OdinSerialize, ReadOnly] private GridLayoutGroup _boardContainer;
         [OdinSerialize, ReadOnly] private GameObject[][] _tiles;
@@ -24,10 +24,18 @@ namespace Gazeus.DesafioMatch3.Views
         {
             _boardContainer = GetComponent<GridLayoutGroup>();
         }
+        
+        public void ConfigureBoardVisuals(BoardVisualConfig config, int constraintCount)
+        {
+            _boardContainer.cellSize = config.CellSize;
+            _boardContainer.spacing = config.Spacing;
+            _boardContainer.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            _boardContainer.constraintCount = constraintCount;
+        }
 
         public void CreateBoard(List<List<TileInfo>> board, IBoardCellView boardCellPrefab, TilePrefabInfo[] tiles)
         {
-            _boardContainer.constraintCount = board[0].Count;
+
             _tiles = new GameObject[board.Count][];
             _boardCells = new IBoardCellView[board.Count][];
             _tilePrefabs = tiles;
@@ -132,7 +140,7 @@ namespace Gazeus.DesafioMatch3.Views
             return sequence;
         }
         
-        private void OnBoardCellClicked(Vector2Int position)
+        private void OnBoardCellClicked(IBoardCellView position)
         {
             TileClicked?.Invoke(position);
         }
