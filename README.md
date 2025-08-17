@@ -223,6 +223,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **DefaultTileGenerationService**: New tile generator that assigns Id and random TileKey from available keys.
 * **DefaultTileSwapService**: Refactored swap/cascade logic into tile swap service; it handles swapping, matching, dropping and refilling using injected services.
 * **Safe defaults & DI-friendly constructors**: All services have default implementations so `BoardService` remains easy to construct while still fully pluggable for tests and future features.
+* **Board State Creation**: Removed `ref` parameters from board services, replacing them with `IBoardState` and `IBoardSwapResult`.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

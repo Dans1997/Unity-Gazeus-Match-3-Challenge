@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Helpers;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services;
 using UnityEngine;
 
@@ -21,10 +22,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             this.availableTileKeys = availableTileKeys;
         }
         
-        public List<BoardSequence> SwapTile(ref List<List<TileInfo>> board, ref int tileCount, int fromX, int fromY, 
-            int toX, int toY)
+        public IBoardSwapResult SwapTile(IBoardState boardState, int fromX, int fromY, int toX, int toY)
         {
-            var newBoard = GameplayHelpers.CopyGameplayBoard(board);
+            var newBoard = GameplayHelpers.CopyGameplayBoard(boardState.BoardTiles);
 
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
@@ -85,7 +85,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                         if (newBoard[y][x].Key != (TileKey) (-1)) continue;
                         
                         var tile = newBoard[y][x];
-                        tileGenerationService.GenerateNextTile(newBoard[y][x], availableTileKeys, ref tileCount);
+                        tileGenerationService.GenerateNextTile(newBoard[y][x], availableTileKeys, boardState);
 
                         addedTiles.Add(new AddedTileInfo
                         {
@@ -105,8 +105,8 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                 matchedTiles = matchFindService.FindMatches(newBoard);
             }
 
-            board = newBoard;
-            return boardSequences;
+            boardState.BoardTiles = newBoard;
+            return new DefaultBoardSwapResult(boardState, boardSequences, 0);
         }
         
         private static bool HasMatch(List<List<bool>> list)

@@ -63,8 +63,8 @@ namespace Gazeus.DesafioMatch3.Controllers
             preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
             
             BoardService.CreateBoard();
-            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, BoardService.BoardTiles[0].Count);
-            GameplayView.BuildBoardVisuals(BoardService.BoardTiles, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
+            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, BoardService.BoardState.BoardTiles[0].Count);
+            GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
         }
         
         public void Dispose()
@@ -96,7 +96,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             ScoreUpdated?.Invoke();
         }
 
-        private void AnimateBoard(List<BoardSequence> boardSequences, int index, Action onComplete)
+        private void AnimateBoard(IReadOnlyList<BoardSequence> boardSequences, int index, Action onComplete)
         {
             var boardSequence = boardSequences[index];
             var boardSequenceScoreInfo = ScoreService.CalculateSequenceScore(boardSequence, index);
@@ -147,7 +147,7 @@ namespace Gazeus.DesafioMatch3.Controllers
                 if (isValid)
                 {
                     var swapResult = BoardService.SwapTile(SelectedX, SelectedY, x, y);
-                    AnimateBoard(swapResult, 0, OnBoardAnimationEnded);
+                    AnimateBoard(swapResult.Sequences, 0, OnBoardAnimationEnded);
                 }
                 else
                 {

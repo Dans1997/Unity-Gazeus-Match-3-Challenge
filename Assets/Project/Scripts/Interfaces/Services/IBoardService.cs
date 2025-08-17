@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 
 namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Services
 {
     public interface IBoardService
     {
-        List<List<TileInfo>> BoardTiles { get; }
-        int TileCount { get; }
-        
-        List<List<TileInfo>> CreateBoard();
+        IBoardState BoardState { get; }
+        void CreateBoard();
         bool IsValidMovement(int fromX, int fromY, int toX, int toY);
         bool HasAnyValidMove();
-        List<BoardSequence> SwapTile(int fromX, int fromY, int toX, int toY);
+        IBoardSwapResult SwapTile(int fromX, int fromY, int toX, int toY);
     }
 }

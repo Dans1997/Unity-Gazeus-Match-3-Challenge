@@ -2,15 +2,16 @@ using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Helpers;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services;
 
 namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 {
     public class DefaultMoveValidationService : IMoveValidationService
     {
-        public bool IsValidMove(List<List<TileInfo>> board, int fromX, int fromY, int toX, int toY)
+        public bool IsValidMove(IBoardState boardState, int fromX, int fromY, int toX, int toY)
         {
-            var newBoard = GameplayHelpers.CopyGameplayBoard(board);
+            var newBoard = GameplayHelpers.CopyGameplayBoard(boardState.BoardTiles);
 
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
@@ -37,20 +38,20 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             return false;
         }
         
-        public bool HasAnyValidMove(List<List<TileInfo>> board)
+        public bool HasAnyValidMove(IBoardState boardState)
         {
-            if (board == null || board.Count == 0) return false;
-            var height = board.Count;
-            var width = board[0].Count;
+            if (boardState == null || boardState.TileCount == 0) return false;
+            var height = boardState.TileCount;
+            var width = boardState.BoardTiles[0].Count;
 
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
                 {
-                    if (x + 1 < width && WouldSwapCreateMatch(board, x, y, x + 1, y))
+                    if (x + 1 < width && WouldSwapCreateMatch(boardState.BoardTiles, x, y, x + 1, y))
                         return true;
                     
-                    if (y + 1 < height && WouldSwapCreateMatch(board, x, y, x, y + 1))
+                    if (y + 1 < height && WouldSwapCreateMatch(boardState.BoardTiles, x, y, x, y + 1))
                         return true;
                 }
             }
@@ -58,7 +59,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             return false;
         }
 
-        public bool WouldSwapCreateMatch(List<List<TileInfo>> board, int x1, int y1, int x2, int y2)
+        public bool WouldSwapCreateMatch(IReadOnlyList<IReadOnlyList<TileInfo>> board, int x1, int y1, int x2, int y2)
         {
             var k1 = board[y1][x1].Key;
             var k2 = board[y2][x2].Key;
@@ -69,7 +70,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             return false;
         }
         
-        public bool WouldFormMatchAt(List<List<TileInfo>> board, int x, int y, TileKey key)
+        public bool WouldFormMatchAt(IReadOnlyList<IReadOnlyList<TileInfo>> board, int x, int y, TileKey key)
         {
             if (key == (TileKey)(-1)) return false;
 

@@ -5,7 +5,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Helpers
 {
     public static class GameplayHelpers
     {
-        public static List<List<TileInfo>> CopyGameplayBoard(List<List<TileInfo>> boardToCopy)
+        public static List<List<TileInfo>> CopyGameplayBoard(IReadOnlyList<IReadOnlyList<TileInfo>> boardToCopy)
         {
             List<List<TileInfo>> newBoard = new(boardToCopy.Count);
             for (var y = 0; y < boardToCopy.Count; y++)

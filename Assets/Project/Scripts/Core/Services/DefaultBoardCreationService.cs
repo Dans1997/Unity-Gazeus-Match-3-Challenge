@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services;
 
 namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
@@ -20,9 +21,10 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             this.tileGenerationService = tileGenerationService;
         }
 
-        public List<List<TileInfo>> CreateBoard(ref List<List<TileInfo>> board, ref int tileCount)
+        public IBoardState CreateBoard()
         {
-            board = new List<List<TileInfo>>(height);
+            var board = new List<List<TileInfo>>(height);
+            var boardState = new DefaultBoardState(board, 0);;
 
             for (var y = 0; y < height; y++)
             {
@@ -53,11 +55,11 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                         noMatchTypes.Remove(board[y - 1][x].Key);
                     }
                     
-                    tileGenerationService.GenerateNextTile(board[y][x], noMatchTypes, ref tileCount);
+                    tileGenerationService.GenerateNextTile(board[y][x], noMatchTypes, boardState);
                 }
             }
 
-            return board;
+            return boardState;
         }
     }
 }
