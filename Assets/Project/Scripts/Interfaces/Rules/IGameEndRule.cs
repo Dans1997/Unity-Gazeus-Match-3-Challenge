@@ -9,6 +9,6 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules
         GameRuleKey GameRuleKey { get; }
         string Message { get; }
         
-        bool IsGameOver(IGameplayService gameplayService, IScoreService scoreService);
+        bool IsGameOver(IBoardService boardService, IScoreService scoreService);
     }
 }

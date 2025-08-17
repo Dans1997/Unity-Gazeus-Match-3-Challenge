@@ -12,6 +12,6 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules
         float StartTime { get; }
         float EndTime { get; }
         
-        UniTask StartAsync(IGameplayService gameplayService, IScoreService scoreService, Action<IGameEndRule> onGameEnd);
+        UniTask StartAsync(IBoardService boardService, IScoreService scoreService, Action<IGameEndRule> onGameEnd);
     }
 }

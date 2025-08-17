@@ -16,7 +16,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
             Threshold = threshold;
         }
 
-        public bool IsGameOver(IGameplayService gameplayService, IScoreService scoreService)
+        public bool IsGameOver(IBoardService boardService, IScoreService scoreService)
         {
             return scoreService.CurrentScore >= Threshold;
         }

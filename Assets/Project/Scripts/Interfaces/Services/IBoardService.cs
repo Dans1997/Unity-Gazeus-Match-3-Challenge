@@ -3,7 +3,7 @@ using Gazeus.DesafioMatch3.Models;
 
 namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Services
 {
-    public interface IGameplayService
+    public interface IBoardService
     {
         List<List<TileInfo>> BoardTiles { get; }
         int TileCount { get; }

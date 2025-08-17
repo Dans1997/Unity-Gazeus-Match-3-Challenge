@@ -30,7 +30,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         
         public GameplayInfo GameplayInfo { get; private set; }
         public IAssetLoadService AssetLoadService { get; private set; }
-        public IGameplayService GameplayService { get; private set; }
+        public IBoardService BoardService { get; private set; }
         public IScoreService ScoreService { get; private set; }
         public IGameplayView GameplayView { get; private set; }
         public IBoardCellView SelectedCellView { get; private set; }
@@ -47,7 +47,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         {
             GameplayInfo = gameplayInfo;
             AssetLoadService = assetLoadService;
-            GameplayService = new GameplayService(gameplayInfo);
+            BoardService = new BoardService(gameplayInfo);
             ScoreService = new ScoreService();
             
             var gameEndRuleFactory = new GameEndRuleFactory();
@@ -61,9 +61,10 @@ namespace Gazeus.DesafioMatch3.Controllers
             GameplayView = await AssetLoadService.InstantiateAsync<GameplayView>(GameplayInfo.GameplayViewPrefabKey);
             boardCellViewPrefab = await AssetLoadService.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
             preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
-            var board = GameplayService.CreateBoard();
-            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, board[0].Count);
-            GameplayView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
+            
+            BoardService.CreateBoard();
+            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, BoardService.BoardTiles[0].Count);
+            GameplayView.BuildBoardVisuals(BoardService.BoardTiles, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
         }
         
         public void Dispose()
@@ -84,7 +85,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             
             foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
             {
-                asyncRule.StartAsync(GameplayService, ScoreService, OnAsyncRuleTriggered).Forget(); 
+                asyncRule.StartAsync(BoardService, ScoreService, OnAsyncRuleTriggered).Forget(); 
             }
             
             GameStarted?.Invoke();
@@ -142,10 +143,10 @@ namespace Gazeus.DesafioMatch3.Controllers
             IsAnimating = true;
             GameplayView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
             {
-                var isValid = GameplayService.IsValidMovement(SelectedX, SelectedY, x, y);
+                var isValid = BoardService.IsValidMovement(SelectedX, SelectedY, x, y);
                 if (isValid)
                 {
-                    var swapResult = GameplayService.SwapTile(SelectedX, SelectedY, x, y);
+                    var swapResult = BoardService.SwapTile(SelectedX, SelectedY, x, y);
                     AnimateBoard(swapResult, 0, OnBoardAnimationEnded);
                 }
                 else
@@ -189,7 +190,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         private void CheckForGameEnd()
         {
             var triggeredRules = GameEndRules
-                .Where(rule => rule.IsGameOver(GameplayService, ScoreService))
+                .Where(rule => rule.IsGameOver(BoardService, ScoreService))
                 .ToList();
 
             if (!triggeredRules.Any()) return;

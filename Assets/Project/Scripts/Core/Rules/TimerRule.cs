@@ -23,12 +23,12 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
             DurationInSeconds = durationInSeconds;
         }
 
-        public bool IsGameOver(IGameplayService gameplayService, IScoreService scoreService)
+        public bool IsGameOver(IBoardService boardService, IScoreService scoreService)
         {
             return ElapsedTime >= DurationInSeconds;
         }
 
-        public async UniTask StartAsync(IGameplayService gameplayService, IScoreService scoreService, 
+        public async UniTask StartAsync(IBoardService boardService, IScoreService scoreService, 
             Action<IGameEndRule> onGameEnd)
         {
             StartTime = Time.time;

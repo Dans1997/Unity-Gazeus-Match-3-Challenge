@@ -11,7 +11,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles
         event Action<IBoardCellView> TileClicked;
         
         void ConfigureBoardVisuals(BoardVisualConfig gameplayInfoBoardVisualConfig, int count);
-        void CreateBoard(List<List<TileInfo>> board, IBoardCellView getComponent, TilePrefabInfo[] preloadedTiles);
+        void BuildBoardVisuals(List<List<TileInfo>> board, IBoardCellView getComponent, TilePrefabInfo[] preloadedTiles);
         Tween CreateTile(List<AddedTileInfo> addedTiles);
         Tween DestroyTiles(List<Vector2Int> matchedPosition);
         Tween MoveTiles(List<MovedTileInfo> movedTiles);

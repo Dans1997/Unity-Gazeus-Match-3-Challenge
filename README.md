@@ -198,7 +198,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **LeanPool Integration**:  Replaced direct Instantiate/Destroy calls with LeanPool.Spawn/Despawn for efficient tile and board cell reuse.
 * **TODOs Maintained**:  TileInfo still has placeholder properties for BackgroundColor and Icon; scoring system still not implemented.
 
-### **Day 3 to 5 (Aug 15th - 17th) — Scoring System & Game Loop**
+### **Day 3 to 4 (Aug 15th - 16th) — Scoring System & Game Loop**
 * **Tile Prefab Injection**: Switched to runtime async prefab loading (`AvailableTileKeys[]`) to avoid holding direct tile prefab references since system startup.
 * **Tile Selection Feedback**: Added some visual QoL improvements to tile selection and game board. This will make testing mechanics later much easier.
 * **Aesthetics:** Quickly came up with a style for the game. 
@@ -213,6 +213,16 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **Event wiring for gameplay**: AudioController provides `RegisterGameplayEvents`/`UnregisterGameplayController` to hook into gameplay lifecycle and tile/score events.
 * **Closed main loop wiring**: Implemented flow to go Main Menu → Gameplay → Game Over → Replay or Main Menu via the added controllers and events.
 * **Notes on asset unloading**: Game loop is closed but asset unloading/cleanup when returning to the main menu still needs finalization to make the experience fully customizable (ensure all controllers/views/audio sources are released).
+
+### **Day 5 (Aug 17th) — Advanced Mechanics**
+* **Rename GameplayService to BoardEngine**: Interface renamed from IGameplayService to IBoardService.
+* **GameplayService modularization**: Replaced monolithic gameplay code with `BoardService` delegating to small services (tile generation, board creation, move validation, tile swap).
+* **DefaultBoardCreationService**: New board creation service that fills board avoiding initial matches and uses `ITileGenerationService`.
+* **DefaultMatchFindService**: New match-finding service that returns the boolean match matrix used by swap logic.
+* **DefaultMoveValidationService**: New service to validate moves and check for any available moves.
+* **DefaultTileGenerationService**: New tile generator that assigns Id and random TileKey from available keys.
+* **DefaultTileSwapService**: Refactored swap/cascade logic into tile swap service; it handles swapping, matching, dropping and refilling using injected services.
+* **Safe defaults & DI-friendly constructors**: All services have default implementations so `BoardService` remains easy to construct while still fully pluggable for tests and future features.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

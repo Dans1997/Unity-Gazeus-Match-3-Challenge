@@ -10,7 +10,5 @@ namespace Gazeus.DesafioMatch3.Models
     {
         public int Id { get; set; }
         public TileKey Key { get; set; }
-        public Color BackgroundColor { get; private set; } // TODO: 
-        public Sprite Icon { get; private set; } // TODO: 
     }
 }

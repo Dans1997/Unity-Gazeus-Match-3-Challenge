@@ -44,7 +44,7 @@ namespace Gazeus.DesafioMatch3.Views
             scoreFormat = config.ScoreFormat;
         }
 
-        public void CreateBoard(List<List<TileInfo>> board, IBoardCellView boardCellPrefab, TilePrefabInfo[] tiles)
+        public void BuildBoardVisuals(List<List<TileInfo>> board, IBoardCellView boardCellPrefab, TilePrefabInfo[] tiles)
         {
             _tiles = new GameObject[board.Count][];
             _boardCells = new IBoardCellView[board.Count][];

@@ -17,7 +17,7 @@ namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers
         
         GameplayInfo GameplayInfo { get; }
         IAssetLoadService AssetLoadService { get; }
-        IGameplayService GameplayService { get; }
+        IBoardService BoardService { get; }
         IGameplayView GameplayView { get; }
         IBoardCellView SelectedCellView { get; }
         bool IsAnimating { get; }

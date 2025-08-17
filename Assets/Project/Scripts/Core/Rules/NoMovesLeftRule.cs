@@ -10,9 +10,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
         public GameRuleKey GameRuleKey => GameRuleKey.NoMovesLeftRule;
         public string Message => $"No More Moves Left!";
         
-        public bool IsGameOver(IGameplayService gameplayService, IScoreService scoreService)
+        public bool IsGameOver(IBoardService boardService, IScoreService scoreService)
         {
-            return !gameplayService.HasAnyValidMove();
+            return !boardService.HasAnyValidMove();
         }
     }
 }
