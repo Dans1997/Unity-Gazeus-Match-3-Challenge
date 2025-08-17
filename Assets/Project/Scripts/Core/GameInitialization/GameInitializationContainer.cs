@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Gazeus.DesafioMatch3.Controllers;
-using Gazeus.DesafioMatch3.Core.Services;
+using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Script.Core.Addressables;
 using Gazeus.Match3Challenge.Project.Script.Core.Services;
@@ -18,12 +19,18 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
 {
     public class GameInitializationContainer : SerializedMonoBehaviour
     {
-        [Header("Debug")] 
+        [Header("Configs")] 
         [OdinSerialize, ReadOnly] private IGameConfig gameConfig;
-        [OdinSerialize, ReadOnly] private IAssetProvider assetProvider;
+        
+        [Header("Services")] 
+        [OdinSerialize, ReadOnly] private IAssetLoadService _assetLoadService;
         [OdinSerialize, ReadOnly] private IControllerLoadService controllerLoadService;
+        
+        [Header("Controllers")] 
+        [OdinSerialize, ReadOnly] private IAudioController audioController;
         [OdinSerialize, ReadOnly] private IMainMenuController mainMenuController;
         [OdinSerialize, ReadOnly] private IGameplayController gameplayController;
+        [OdinSerialize, ReadOnly] private IGameOverScreenController gameOverScreenController;
         [OdinSerialize, ReadOnly] private ILoadingScreenController loadingScreenController;
         
         private async void Start()
@@ -31,15 +38,20 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
             try
             {
                 await Addressables.InitializeAsync().ToUniTask();
-                assetProvider = new AddressablesAssetProvider();
+                
+                _assetLoadService = new AddressablesAssetLoadService();
                 controllerLoadService = new ControllerLoadService();
                 
-                gameConfig = await assetProvider.LoadAssetAsync<IGameConfig>(AddressablesAssetKeys.GameConfigKey);
-                loadingScreenController = await LoadLoadingScreenAsync();
+                gameConfig = await _assetLoadService.LoadAssetAsync<IGameConfig>(AddressablesAssetKeys.GameConfigKey);
+
+                audioController = await controllerLoadService.LoadAsync(() =>
+                {
+                    var controller = new AudioController(gameConfig.AudioControllerConfig, _assetLoadService);
+                    return controller;
+                });
                 
-                await loadingScreenController.Show();
-                mainMenuController = await LoadMainMenuAsync();
-                await loadingScreenController.Hide();
+                loadingScreenController = await LoadLoadingScreenAsync();
+                await ShowMainMenuAsync();
             }
             catch (Exception e)
             {
@@ -55,31 +67,11 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
             UnloadLoadingScreen();
         }
 
-        private async UniTask<IMainMenuController> LoadMainMenuAsync()
-        {
-            return await controllerLoadService.LoadAsync(() =>
-            {
-                var controller = new MainMenuController(assetProvider, gameConfig.MainMenuViewKey);
-                controller.PlayRequested += OnPlayRequested;
-                controller.ExitRequested += OnExitRequested;
-                return controller;
-            });
-        }
-
-        private void UnloadMainMenu()
-        {
-            if (mainMenuController == null) return;
-            mainMenuController.PlayRequested -= OnPlayRequested;
-            mainMenuController.ExitRequested -= OnExitRequested;
-            controllerLoadService.Unload(mainMenuController);
-        }
-
         private async UniTask<IGameplayController> LoadGameplayAsync()
         {
             return await controllerLoadService.LoadAsync(() =>
             {
-                var gameplayService = new GameplayService();
-                var controller = new GameplayController(gameConfig.GameplayInfo, assetProvider, gameplayService);
+                var controller = new GameplayController(gameConfig.GameplayInfo, _assetLoadService);
                 return controller;
             });
         }
@@ -89,12 +81,31 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
             if (gameplayController == null) return;
             controllerLoadService.Unload(gameplayController);
         }
+
+        private async UniTask<IGameOverScreenController> LoadGameOverScreenAsync(GameEndResults gameEndResults)
+        {
+            return await controllerLoadService.LoadAsync(() =>
+            {
+                var controller = new GameOverScreenController(gameConfig.GameplayInfo, gameEndResults, _assetLoadService);
+                controller.ReplayRequested += OnReplayRequested;
+                controller.MainMenuRequested += OnMainMenuRequested;
+                return controller;
+            });
+        }
+
+        private void UnloadGameOverScreen()
+        {
+            if (gameOverScreenController == null) return;
+            gameOverScreenController.ReplayRequested -= OnReplayRequested;
+            gameOverScreenController.MainMenuRequested -= OnMainMenuRequested;
+            controllerLoadService.Unload(gameOverScreenController);
+        }
         
         private async UniTask<ILoadingScreenController> LoadLoadingScreenAsync()
         {
             return await controllerLoadService.LoadAsync(() =>
             {
-                var controller = new LoadingScreenScreenController(assetProvider, gameConfig.LoadingScreenViewKey, 
+                var controller = new LoadingScreenScreenController(_assetLoadService, gameConfig.LoadingScreenViewKey, 
                     gameConfig.LoadingScreenTransitionDuration);
                 return controller;
             });
@@ -112,12 +123,60 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
             
             UnloadMainMenu();
             gameplayController = await LoadGameplayAsync();
+            audioController.RegisterGameplayEvents(gameplayController);
             
             await loadingScreenController.Hide();
+
+            gameplayController.GameEnded += OnGameEnded;
+            gameplayController.StartGame();
+        }
+
+        private async void OnGameEnded(GameEndResults gameEndResults)
+        {
+            gameplayController.GameEnded -= OnGameEnded;
+            gameOverScreenController = await LoadGameOverScreenAsync(gameEndResults);
             
-            // TODO
+            var allMessages = string.Join("; ", gameEndResults.TriggeredEndRules.Select(r => r.Message).ToArray());
+            Debug.Log($"[GameplayController] Game Ended: {allMessages}");
         }
         
+        private async void OnReplayRequested()
+        {
+            await loadingScreenController.Show();
+            UnloadGameOverScreen();
+            UnloadGameplay();
+            OnPlayRequested();
+        }
+
+        private async void OnMainMenuRequested()
+        {
+            await loadingScreenController.Show();
+            UnloadGameOverScreen();
+            UnloadGameplay();
+            await ShowMainMenuAsync();
+        }
+        
+        private async UniTask ShowMainMenuAsync()
+        {
+            await loadingScreenController.Show();
+            mainMenuController = await controllerLoadService.LoadAsync(() =>
+            {
+                var controller = new MainMenuController(_assetLoadService, gameConfig.MainMenuViewKey);
+                controller.PlayRequested += OnPlayRequested;
+                controller.ExitRequested += OnExitRequested;
+                return controller;
+            });
+            await loadingScreenController.Hide();
+        }
+        
+        private void UnloadMainMenu()
+        {
+            if (mainMenuController == null) return;
+            mainMenuController.PlayRequested -= OnPlayRequested;
+            mainMenuController.ExitRequested -= OnExitRequested;
+            controllerLoadService.Unload(mainMenuController);
+        }
+
         private static void OnExitRequested()
         {
             Application.Quit();

@@ -270,16 +270,25 @@ MonoBehaviour:
     - Name: gameConfig
       Entry: 6
       Data: 
-    - Name: _mainMenuSceneLoadService
+    - Name: _assetLoadService
+      Entry: 6
+      Data: 
+    - Name: controllerLoadService
+      Entry: 6
+      Data: 
+    - Name: audioController
       Entry: 6
       Data: 
     - Name: mainMenuController
       Entry: 6
       Data: 
-    - Name: _gameplaySceneLoadService
+    - Name: gameplayController
       Entry: 6
       Data: 
-    - Name: gameplayController
+    - Name: gameOverScreenController
+      Entry: 6
+      Data: 
+    - Name: loadingScreenController
       Entry: 6
       Data: 
 --- !u!1 &1533040084

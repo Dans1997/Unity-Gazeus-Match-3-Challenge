@@ -9,5 +9,6 @@ namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Configs
         public LoadingScreenViewKey LoadingScreenViewKey { get; }
         float LoadingScreenTransitionDuration { get; }
         public GameplayInfo GameplayInfo { get; }
+        public AudioControllerConfig AudioControllerConfig { get; }
     }
 }

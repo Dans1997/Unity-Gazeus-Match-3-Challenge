@@ -12,9 +12,14 @@ namespace Gazeus.DesafioMatch3.ScriptableObjects
     {
         [FoldoutGroup("Main Menu")] [OdinSerialize] public MainMenuViewKey MainMenuViewKey { get; private set; }
         
+        [field: Space]
         [FoldoutGroup("Loading Screen")] [OdinSerialize] public LoadingScreenViewKey LoadingScreenViewKey { get; private set; }
         [FoldoutGroup("Loading Screen")] [OdinSerialize] public float LoadingScreenTransitionDuration { get; private set; }
         
+        [field: Space]
         [FoldoutGroup("Gameplay")] [OdinSerialize] public GameplayInfo GameplayInfo { get; private set; }
+        
+        [field: Space]
+        [FoldoutGroup("Audio")] [OdinSerialize] public AudioControllerConfig AudioControllerConfig { get; private set; }
     }
 }

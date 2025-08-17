@@ -9,28 +9,28 @@ namespace Gazeus.DesafioMatch3.Controllers
 {
     public class LoadingScreenScreenController : ILoadingScreenController
     {
-        public IAssetProvider AssetProvider { get; private set; }
+        public IAssetLoadService AssetLoadService { get; private set; }
         private readonly LoadingScreenViewKey loadingScreenViewKey;
         private readonly float transitionDuration;
         private LoadingScreenView loadingScreenView;
 
-        public LoadingScreenScreenController(IAssetProvider assetProvider, LoadingScreenViewKey loadingScreenViewKey,
+        public LoadingScreenScreenController(IAssetLoadService assetLoadService, LoadingScreenViewKey loadingScreenViewKey,
             float transitionDuration)
         {
-            AssetProvider = assetProvider;
+            AssetLoadService = assetLoadService;
             this.loadingScreenViewKey = loadingScreenViewKey;
             this.transitionDuration = transitionDuration;
         }
         
         public async UniTask Initialize()
         {
-            loadingScreenView = await AssetProvider.InstantiateAsync<LoadingScreenView>(loadingScreenViewKey);
+            loadingScreenView = await AssetLoadService.InstantiateAsync<LoadingScreenView>(loadingScreenViewKey);
         }
 
         public void Dispose()
         {
             if (loadingScreenView == null) return;
-            AssetProvider.Release(loadingScreenView.gameObject);
+            AssetLoadService.Release(loadingScreenView.gameObject);
             loadingScreenView = null;
         }
 

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Gazeus.DesafioMatch3.Core.Services;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.DesafioMatch3.Views;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Controllers;
+using Gazeus.Match3Challenge.Project.Script.Interfaces.Scores;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Services;
+using Gazeus.Match3Challenge.Project.Scripts.Core.Rules;
+using Gazeus.Match3Challenge.Project.Scripts.Core.Services;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using UnityEngine;
 
@@ -16,51 +21,92 @@ namespace Gazeus.DesafioMatch3.Controllers
 {
     public class GameplayController : IGameplayController
     {
+        public event Action GameStarted;
+        public event Action TileClicked;
+        public event Action TileSelected;
+        public event Action TileSwapped;
+        public event Action ScoreUpdated;
+        public event Action<GameEndResults> GameEnded;
+        
         public GameplayInfo GameplayInfo { get; private set; }
-        public IAssetProvider AssetProvider { get; private set; }
+        public IAssetLoadService AssetLoadService { get; private set; }
         public IGameplayService GameplayService { get; private set; }
-        public BoardView BoardView { get; private set; }
+        public IScoreService ScoreService { get; private set; }
+        public IGameplayView GameplayView { get; private set; }
         public IBoardCellView SelectedCellView { get; private set; }
+        public IGameEndRule[] GameEndRules { get; private set; }
         public bool IsAnimating { get; private set; }
         public int SelectedX => SelectedCellView?.Position.x ?? -1;
         public int SelectedY => SelectedCellView?.Position.y ?? -1;
         
-        public GameplayController(GameplayInfo gameplayInfo, IAssetProvider assetProvider,
-            IGameplayService gameplayService)
+        private GameObject boardCellViewPrefab;
+        private TilePrefabInfo[] preloadedTiles;
+        private float gameStartTime;
+
+        public GameplayController(GameplayInfo gameplayInfo, IAssetLoadService assetLoadService)
         {
             GameplayInfo = gameplayInfo;
-            AssetProvider = assetProvider;
-            GameplayService = gameplayService;
+            AssetLoadService = assetLoadService;
+            GameplayService = new GameplayService(gameplayInfo);
+            ScoreService = new ScoreService();
+            
+            var gameEndRuleFactory = new GameEndRuleFactory();
+            GameEndRules = GameplayInfo.GameEndRules    
+                .Select(config => gameEndRuleFactory.Create(config))
+                .ToArray();
         } 
         
         public async UniTask Initialize()
         {
-            BoardView = await AssetProvider.InstantiateAsync<BoardView>(GameplayInfo.GameplayViewPrefabKey);
-            var boardCellViewPrefab = await AssetProvider.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
-            var board = GameplayService.StartGame(GameplayInfo);
-            var preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
-            
-            BoardView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, board[0].Count);
-            BoardView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
-            BoardView.TileClicked += OnTileClick;
+            GameplayView = await AssetLoadService.InstantiateAsync<GameplayView>(GameplayInfo.GameplayViewPrefabKey);
+            boardCellViewPrefab = await AssetLoadService.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
+            preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
+            var board = GameplayService.CreateBoard();
+            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, board[0].Count);
+            GameplayView.CreateBoard(board, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
         }
         
         public void Dispose()
         {
-            if (BoardView == null) return;
-            BoardView.TileClicked -= OnTileClick;
-            AssetProvider.Release(BoardView.gameObject);
-            BoardView = null;
+            if (GameplayView == null) return;
+            GameplayView.TileClicked -= OnTileClick;
+            AssetLoadService.Release(GameplayView.Transform.gameObject);
+            GameplayView = null;
+            
+            ScoreService.ScoreUpdated -= OnScoreUpdated;
+        }
+
+        public void StartGame()
+        {
+            gameStartTime = Time.time;
+            GameplayView.TileClicked += OnTileClick;
+            ScoreService.ScoreUpdated += OnScoreUpdated;
+            
+            foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
+            {
+                asyncRule.StartAsync(GameplayService, ScoreService, OnAsyncRuleTriggered).Forget(); 
+            }
+            
+            GameStarted?.Invoke();
+        }
+
+        private void OnScoreUpdated(int newScore)
+        {
+            ScoreUpdated?.Invoke();
         }
 
         private void AnimateBoard(List<BoardSequence> boardSequences, int index, Action onComplete)
         {
             var boardSequence = boardSequences[index];
-
+            var boardSequenceScoreInfo = ScoreService.CalculateSequenceScore(boardSequence, index);
+                
             var sequence = DOTween.Sequence();
-            sequence.Append(BoardView.DestroyTiles(boardSequence.MatchedPosition));
-            sequence.Append(BoardView.MoveTiles(boardSequence.MovedTiles));
-            sequence.Append(BoardView.CreateTile(boardSequence.AddedTiles));
+            sequence.Append(GameplayView.DestroyTiles(boardSequence.MatchedPosition));
+            sequence.Append(GameplayView.MoveTiles(boardSequence.MovedTiles));
+            sequence.Append(GameplayView.CreateTile(boardSequence.AddedTiles));
+            sequence.Append(GameplayView.UpdateScore(boardSequenceScoreInfo));
+            
+            Debug.Log($"[GameplayController] Animating sequence: \n{boardSequence}");
 
             index += 1;
             if (index < boardSequences.Count)
@@ -85,7 +131,7 @@ namespace Gazeus.DesafioMatch3.Controllers
                 return;
             }
 
-            if (Mathf.Abs(SelectedX - x) + Mathf.Abs(SelectedY - y) > 1)
+            if (SelectedCellView == clickedCellView || Mathf.Abs(SelectedX - x) + Mathf.Abs(SelectedY - y) > 1)
             {
                 DeselectBoardCellView();
                 return;
@@ -94,28 +140,32 @@ namespace Gazeus.DesafioMatch3.Controllers
             SelectedCellView?.SetSelected(false);
             
             IsAnimating = true;
-            BoardView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
+            GameplayView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
             {
                 var isValid = GameplayService.IsValidMovement(SelectedX, SelectedY, x, y);
                 if (isValid)
                 {
                     var swapResult = GameplayService.SwapTile(SelectedX, SelectedY, x, y);
-                    AnimateBoard(swapResult, 0, () => IsAnimating = false);
+                    AnimateBoard(swapResult, 0, OnBoardAnimationEnded);
                 }
                 else
                 {
-                    BoardView.SwapTiles(x, y, SelectedX, SelectedY).onComplete += () => IsAnimating = false;
+                    GameplayView.SwapTiles(x, y, SelectedX, SelectedY).onComplete += () => IsAnimating = false;
+                    TileSwapped?.Invoke();
                 }
 
                 DeselectBoardCellView();
             };
+            
+            TileSwapped?.Invoke();
         }
 
         private void SelectBoardCellView(IBoardCellView boardCellView)
         {
             SelectedCellView = boardCellView;
             SelectedCellView?.SetSelected(true);
-            Debug.Log($"[GaneplayController] Tile {boardCellView.Position} selected");
+            TileSelected?.Invoke();
+            Debug.Log($"[GameplayController] Tile {boardCellView.Position} selected");
         }
 
         private void DeselectBoardCellView()
@@ -124,11 +174,46 @@ namespace Gazeus.DesafioMatch3.Controllers
             SelectedCellView = null;
         }
 
+        private void OnBoardAnimationEnded()
+        {
+            IsAnimating = false;
+            CheckForGameEnd();
+        }
+        
+        private void OnAsyncRuleTriggered(IGameEndRule triggeredEndRule)
+        {
+            if (IsAnimating) return;
+            EndGame(new[] { triggeredEndRule });
+        }
+        
+        private void CheckForGameEnd()
+        {
+            var triggeredRules = GameEndRules
+                .Where(rule => rule.IsGameOver(GameplayService, ScoreService))
+                .ToList();
+
+            if (!triggeredRules.Any()) return;
+            
+            EndGame(triggeredRules);
+        }
+
+        private void EndGame(IReadOnlyCollection<IGameEndRule> triggeredEndGameRules)
+        {
+            var gameEndResults = new GameEndResults
+            {
+                FinalScore = ScoreService.CurrentScore,
+                FinalTimeInSeconds = Time.time - gameStartTime,
+                TriggeredEndRules = triggeredEndGameRules
+            };
+            
+            GameEnded?.Invoke(gameEndResults);
+        }
+
         private async UniTask<TilePrefabInfo[]> LoadTilesAsync(TileKey[] keys)
         {
             var maxIndex = keys.Max(k => (int)k);
             var entries = new TilePrefabInfo[maxIndex + 1];
-            var prefabs = await AssetProvider.LoadAssetsAsync<TileKey, GameObject>(keys);
+            var prefabs = await AssetLoadService.LoadAssetsAsync<TileKey, GameObject>(keys);
             
             for (var i = 0; i < keys.Length; i++)
             {

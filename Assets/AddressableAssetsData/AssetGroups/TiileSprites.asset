@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: TiileSprites
+  m_EditorClassIdentifier: 
+  m_GroupName: TiileSprites
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 9f7b3f5444f99024f8b073f75c6831f8
+  m_SerializeEntries:
+  - m_GUID: 09ec0aadae50292428acb6bea10e868e
+    m_Address: ArthropodaTIleSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b0cb0ccc40d23b469b3614553d42103
+    m_Address: ThunderTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c90cc6632066714aa514b988a83ef6d
+    m_Address: EarthTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3868858aa107626448d3756c4fd56c76
+    m_Address: FireTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f15668acb00ce743a7e4bcc895eba18
+    m_Address: IceTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5fca96e205331304d9b46e6780cedf18
+    m_Address: LeafTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7600586dc13b65143bea4dbdb542786a
+    m_Address: AirTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 761918e99dae3334cbc03f1dbf1cc4c8
+    m_Address: SpiritTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad6d33e10d4faa84f9222051df43ad01
+    m_Address: DemonTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e74df690578efee4b958ac9bed5fa711
+    m_Address: LindwormTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e841f8d2a4cc10c4ca12cd1535be0370
+    m_Address: WaterTileSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5ae8a7564f813894496c9d3491d5a0d5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 35522e7dc464bad4aa81a3f9b37e3cbb, type: 2}
+    - {fileID: 11400000, guid: 76b5de30aadb2734e81bceaa07a7bb3f, type: 2}

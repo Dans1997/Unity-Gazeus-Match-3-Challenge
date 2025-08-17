@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Audio
+  m_EditorClassIdentifier: 
+  m_GroupName: Audio
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 186f12f99bbdf394388444f47bb3967e
+  m_SerializeEntries:
+  - m_GUID: 2ac6072f4b071ee40b59686cdd932eb2
+    m_Address: ScoreUpdatedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a6be55340bc48f4281202cf5a1c0d4b
+    m_Address: TileSwappedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 579b052f9a14d434fb558c88fa17ce2d
+    m_Address: TileSelectedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83148d124f7c7064fb45d22ff5dccc9c
+    m_Address: TileClickedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83214be150219574b9980f382edf12a9
+    m_Address: MysticalEnergySoundtrack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 955e2929684442846827bb5b65954b0f
+    m_Address: GameEndedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd15e4b008b6b4a499dd245103a9d9a8
+    m_Address: GameStartedSfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5ae8a7564f813894496c9d3491d5a0d5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 87bdf4ee9678660429e206180b88445f, type: 2}
+    - {fileID: 11400000, guid: baf1d19873d28bb498d10878528f1836, type: 2}

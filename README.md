@@ -82,6 +82,12 @@ Your submission will be assessed based on the following factors:
 
 Of course, this is **my** interpretation of what is being evaluated. Evaluation is never 100% objective. 
 
+## Credits
+* **Tiles:** imbusdev / Georg Eckert
+* **SpaceBackground:** Digital Moons https://digitalmoons.itch.io/\
+* **Font:** Grisly Beast by nhsfonts
+* **Music:** Dvir Silverstone from Pixabay
+
 ## 📅 Development Log
 
 This section will be updated as commits are made.
@@ -192,9 +198,21 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **LeanPool Integration**:  Replaced direct Instantiate/Destroy calls with LeanPool.Spawn/Despawn for efficient tile and board cell reuse.
 * **TODOs Maintained**:  TileInfo still has placeholder properties for BackgroundColor and Icon; scoring system still not implemented.
 
-### **Day 3 (Aug 15th) — Extendable Scoring System**
+### **Day 3 to 5 (Aug 15th - 17th) — Scoring System & Game Loop**
 * **Tile Prefab Injection**: Switched to runtime async prefab loading (`AvailableTileKeys[]`) to avoid holding direct tile prefab references since system startup.
 * **Tile Selection Feedback**: Added some visual QoL improvements to tile selection and game board. This will make testing mechanics later much easier.
+* **Aesthetics:** Quickly came up with a style for the game. 
+* **AudioController**: Added `AudioController` that loads audio clips and audio sources via `IAssetLoadService`, exposes `PlayMusic`/`PlaySfx`, and can register/unregister gameplay event handlers.
+* **GameOverScreenController**: Added `GameOverScreenController` that instantiates `IGameOverScreenView`, sets end-game data, and exposes `ReplayRequested` and `MainMenuRequested` events.
+* **GameOverScreenView**: Added view implementation for game-over UI with final score/time text and replay/back buttons wired to events.
+* **GameEndResults & GameRuleConfig**: Added `GameEndResults` struct and `GameRuleConfig` struct to carry end-of-game data and rule configuration (score threshold, timer).
+* **GameEndRuleFactory**: Added factory to create end-rule implementations from `GameRuleConfig`.
+* **TimerRule (async rule)**: Implemented `TimerRule` as an async game-end rule that invokes a callback when time elapses.
+* **ScoreService (updated)**: Added a project `ScoreService` with `ScoreUpdated` event, `SetScore(int)` and `CalculateSequenceScore(BoardSequence,int)` that updates current score and returns `BoardSequenceScoreInfo`.
+* **Audio keys and loading**: AudioController loads clips based on `AudioKey` and uses configs stored in `AudioControllerConfig`.
+* **Event wiring for gameplay**: AudioController provides `RegisterGameplayEvents`/`UnregisterGameplayController` to hook into gameplay lifecycle and tile/score events.
+* **Closed main loop wiring**: Implemented flow to go Main Menu → Gameplay → Game Over → Replay or Main Menu via the added controllers and events.
+* **Notes on asset unloading**: Game loop is closed but asset unloading/cleanup when returning to the main menu still needs finalization to make the experience fully customizable (ensure all controllers/views/audio sources are released).
 
 *(Future days will detail added features, fixes, and design choices.)*
 

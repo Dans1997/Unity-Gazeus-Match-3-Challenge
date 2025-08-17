@@ -11,19 +11,19 @@ namespace Gazeus.DesafioMatch3.Controllers
     {
         public event Action PlayRequested;
         public event Action ExitRequested;
-        public IAssetProvider AssetProvider { get; private set; }
+        public IAssetLoadService AssetLoadService { get; private set; }
         private readonly MainMenuViewKey mainMenuViewKey;
         private MainMenuView mainMenuView;
 
-        public MainMenuController(IAssetProvider assetProvider, MainMenuViewKey mainMenuViewKey)
+        public MainMenuController(IAssetLoadService assetLoadService, MainMenuViewKey mainMenuViewKey)
         {
-            AssetProvider = assetProvider;
+            AssetLoadService = assetLoadService;
             this.mainMenuViewKey = mainMenuViewKey;
         }
         
         public async UniTask Initialize()
         {
-            mainMenuView = await AssetProvider.InstantiateAsync<MainMenuView>(mainMenuViewKey);
+            mainMenuView = await AssetLoadService.InstantiateAsync<MainMenuView>(mainMenuViewKey);
             mainMenuView.PlayButtonClicked += OnPlayClicked;
             mainMenuView.ExitButtonClicked += OnExitClicked;
         }
@@ -33,7 +33,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             if (mainMenuView == null) return;
             mainMenuView.PlayButtonClicked -= OnPlayClicked;
             mainMenuView.ExitButtonClicked -= OnExitClicked;
-            AssetProvider.Release(mainMenuView.gameObject);
+            AssetLoadService.Release(mainMenuView.gameObject);
             mainMenuView = null;
         }
 

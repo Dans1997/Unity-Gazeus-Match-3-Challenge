@@ -9,5 +9,6 @@ namespace Gazeus.DesafioMatch3.Models
     {
         [OdinSerialize] public Vector2 CellSize { get; private set; }
         [OdinSerialize] public Vector2 Spacing { get; private set; }
+        [OdinSerialize] public string ScoreFormat { get; private set; }
     }
 }

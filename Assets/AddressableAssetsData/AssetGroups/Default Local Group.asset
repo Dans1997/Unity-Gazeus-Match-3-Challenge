@@ -16,7 +16,22 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 688a26891d3281348b9f94b21f6f3bd2
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 10736195f463e2846954aaadbcf6a542
+    m_Address: DefaultMusicSource
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7712c7d19adb44045a420340654ec53a
+    m_Address: DefaultSfxSource
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd88b58e38712fb4a8b13fc0ac8e9d8a
+    m_Address: SpaceBackgroundSprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5ae8a7564f813894496c9d3491d5a0d5, type: 2}
   m_SchemaSet:
