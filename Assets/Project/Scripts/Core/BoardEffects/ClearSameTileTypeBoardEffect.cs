@@ -15,15 +15,12 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.BoardEffects
         public IReadOnlyCollection<Vector2Int> Evaluate(ITileMatchInfo match, IBoardState boardState)
         {
             var results = new HashSet<Vector2Int>();
-            var board = boardState.BoardTiles;
-            var height = board.Count;
-            var width = board[0].Count;
             var key = match.MatchedTileType;
-            for (var y = 0; y < height; y++)
+            for (var y = 0; y < boardState.BoardHeight; y++)
             {
-                for (var x = 0; x < width; x++)
+                for (var x = 0; x < boardState.BoardWidth; x++)
                 {
-                    if (board[y][x].Key == key) results.Add(new Vector2Int(x, y));
+                    if (boardState.BoardTiles[y][x].Key == key) results.Add(new Vector2Int(x, y));
                 }
             }
             return results;

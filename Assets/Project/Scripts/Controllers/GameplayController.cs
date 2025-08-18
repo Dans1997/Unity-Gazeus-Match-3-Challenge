@@ -70,7 +70,7 @@ namespace Gazeus.DesafioMatch3.Controllers
                 boardTileLoadedAssets, 
                 boardCellViewPrefab.GetComponent<IBoardCellView>(), 
                 boardTileViewPrefab.GetComponent<IBoardTileView>(), 
-                BoardService.BoardState.BoardTiles[0].Count
+                BoardService.BoardState.BoardWidth
             );
             GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles);
         }

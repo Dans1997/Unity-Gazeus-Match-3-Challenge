@@ -33,18 +33,14 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
         
         public bool HasAnyValidMove(IBoardState boardState)
         {
-            var board = boardState.BoardTiles;
-            var height = board.Count;
-            var width = board[0].Count;
-
-            for (var y = 0; y < height; y++)
+            for (var y = 0; y < boardState.BoardHeight; y++)
             {
-                for (var x = 0; x < width; x++)
+                for (var x = 0; x < boardState.BoardWidth; x++)
                 {
-                    if (x + 1 < width && WouldSwapCreateMatch(boardState, x, y, x + 1, y))
+                    if (x + 1 < boardState.BoardWidth && WouldSwapCreateMatch(boardState, x, y, x + 1, y))
                         return true;
                     
-                    if (y + 1 < height && WouldSwapCreateMatch(boardState, x, y, x, y + 1))
+                    if (y + 1 < boardState.BoardWidth && WouldSwapCreateMatch(boardState, x, y, x, y + 1))
                         return true;
                 }
             }
@@ -55,13 +51,11 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
         private bool WouldSwapCreateMatch(IBoardState boardState, int x1, int y1, int x2, int y2)
         {
             var board = boardState.BoardTiles;
-            var height = board.Count;
-            var width = board[0].Count;
 
             var minX = Math.Max(0, Math.Min(x1, x2) - localPadding);
             var minY = Math.Max(0, Math.Min(y1, y2) - localPadding);
-            var maxX = Math.Min(width - 1, Math.Max(x1, x2) + localPadding);
-            var maxY = Math.Min(height - 1, Math.Max(y1, y2) + localPadding);
+            var maxX = Math.Min(boardState.BoardWidth - 1, Math.Max(x1, x2) + localPadding);
+            var maxY = Math.Min(boardState.BoardHeight - 1, Math.Max(y1, y2) + localPadding);
 
             var sub = new List<List<TileInfo>>(maxY - minY + 1);
             for (var sy = minY; sy <= maxY; sy++)

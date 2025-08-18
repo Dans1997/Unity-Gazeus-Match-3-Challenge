@@ -7,6 +7,8 @@ namespace Gazeus.DesafioMatch3.Models
     {
         public List<List<TileInfo>> BoardTiles { get; set; }
         public int TileCount { get; set; }
+        public int BoardHeight => BoardTiles.Count;
+        public int BoardWidth => BoardTiles[0].Count;
 
         public DefaultBoardState(List<List<TileInfo>> tiles, int tileCount)
         {

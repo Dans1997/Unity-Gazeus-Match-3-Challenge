@@ -14,11 +14,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.BoardEffects
 
         public IReadOnlyCollection<Vector2Int> Evaluate(ITileMatchInfo match, IBoardState boardState)
         {
-            var board = boardState.BoardTiles;
-            var height = board.Count;
             var x = match.Positions[0].x;
             var results = new HashSet<Vector2Int>();
-            for (var y = 0; y < height; y++)
+            for (var y = 0; y < boardState.BoardHeight; y++)
             {
                 results.Add(new Vector2Int(x, y));
             }

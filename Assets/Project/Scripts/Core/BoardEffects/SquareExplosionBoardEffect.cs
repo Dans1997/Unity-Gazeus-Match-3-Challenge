@@ -15,14 +15,11 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.BoardEffects
         {
             var results = new HashSet<Vector2Int>();
             var center = match.Positions[0];
-            var board = boardState.BoardTiles;
-            var height = board.Count;
-            var width = board[0].Count;
             var r = Mathf.Max(0, BoardEffectConfig.ExplosionRadius);
             var minX = Mathf.Max(0, center.x - r);
-            var maxX = Mathf.Min(width - 1, center.x + r);
+            var maxX = Mathf.Min(boardState.BoardWidth - 1, center.x + r);
             var minY = Mathf.Max(0, center.y - r);
-            var maxY = Mathf.Min(height - 1, center.y + r);
+            var maxY = Mathf.Min(boardState.BoardHeight - 1, center.y + r);
 
             for (var yy = minY; yy <= maxY; yy++)
             {
