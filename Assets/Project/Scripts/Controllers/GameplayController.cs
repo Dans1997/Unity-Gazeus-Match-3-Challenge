@@ -102,7 +102,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             var boardSequenceScoreInfo = ScoreService.CalculateSequenceScore(boardSequence, index);
                 
             var sequence = DOTween.Sequence();
-            sequence.Append(GameplayView.DestroyTiles(boardSequence.MatchedPosition));
+            sequence.Append(GameplayView.DestroyTiles(boardSequence.MatchedPositions));
             sequence.Append(GameplayView.MoveTiles(boardSequence.MovedTiles));
             sequence.Append(GameplayView.CreateTile(boardSequence.AddedTiles));
             sequence.Append(GameplayView.UpdateScore(boardSequenceScoreInfo));

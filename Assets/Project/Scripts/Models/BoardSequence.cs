@@ -6,9 +6,17 @@ namespace Gazeus.DesafioMatch3.Models
 {
     public class BoardSequence
     {
-        public List<MovedTileInfo> MovedTiles { get; set; }
-        public List<AddedTileInfo> AddedTiles { get; set; }
-        public List<Vector2Int> MatchedPosition { get; set; }
+        public IReadOnlyList<MovedTileInfo> MovedTiles { get; private set; }
+        public IReadOnlyList<AddedTileInfo> AddedTiles { get; private set; }
+        public IReadOnlyList<Vector2Int> MatchedPositions { get; private set; }
+        
+        public BoardSequence(IReadOnlyList<MovedTileInfo> movedTiles, IReadOnlyList<AddedTileInfo> addedTiles, 
+            HashSet<Vector2Int> matchedPositions)
+        {
+            MovedTiles = movedTiles;
+            AddedTiles = addedTiles;
+            MatchedPositions = matchedPositions.ToList();
+        }
         
         public override string ToString()
         {
@@ -20,8 +28,8 @@ namespace Gazeus.DesafioMatch3.Models
                 ? string.Join(", ", AddedTiles.Select(t => t.ToString()))
                 : "null";
 
-            var matchedPosStr = MatchedPosition != null
-                ? string.Join(", ", MatchedPosition.Select(p => p.ToString()))
+            var matchedPosStr = MatchedPositions != null
+                ? string.Join(", ", MatchedPositions.Select(p => p.ToString()))
                 : "null";
 
             return $"BoardSequence {{ \n" +

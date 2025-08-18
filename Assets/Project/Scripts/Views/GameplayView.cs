@@ -77,7 +77,7 @@ namespace Gazeus.DesafioMatch3.Views
             }
         }
 
-        public Tween CreateTile(List<AddedTileInfo> addedTiles)
+        public Tween CreateTile(IReadOnlyList<AddedTileInfo> addedTiles)
         {
             var sequence = DOTween.Sequence();
             for (var i = 0; i < addedTiles.Count; i++)
@@ -98,7 +98,7 @@ namespace Gazeus.DesafioMatch3.Views
             return sequence;
         }
 
-        public Tween DestroyTiles(List<Vector2Int> matchedPosition)
+        public Tween DestroyTiles(IReadOnlyList<Vector2Int> matchedPosition)
         {
             for (var i = 0; i < matchedPosition.Count; i++)
             {
@@ -110,7 +110,7 @@ namespace Gazeus.DesafioMatch3.Views
             return DOVirtual.DelayedCall(0.2f, () => { });
         }
 
-        public Tween MoveTiles(List<MovedTileInfo> movedTiles)
+        public Tween MoveTiles(IReadOnlyList<MovedTileInfo> movedTiles)
         {
             var tiles = new GameObject[_tiles.Length][];
             for (var y = 0; y < _tiles.Length; y++)

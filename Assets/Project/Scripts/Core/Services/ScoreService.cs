@@ -23,7 +23,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
         public BoardSequenceScoreInfo CalculateSequenceScore(BoardSequence boardSequence, int index)
         {
             var matchDepth = index + 1;
-            var matchSize = boardSequence.MatchedPosition.Count;
+            var matchSize = boardSequence.MatchedPositions.Count;
             var scoreDelta = matchSize + matchDepth;
             var oldScore = CurrentScore;
             var newScore = CurrentScore + scoreDelta;

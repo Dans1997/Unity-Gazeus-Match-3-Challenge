@@ -224,6 +224,9 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **DefaultTileSwapService**: Refactored swap/cascade logic into tile swap service; it handles swapping, matching, dropping and refilling using injected services.
 * **Safe defaults & DI-friendly constructors**: All services have default implementations so `BoardService` remains easy to construct while still fully pluggable for tests and future features.
 * **Board State Creation**: Removed `ref` parameters from board services, replacing them with `IBoardState` and `IBoardSwapResult`.
+* **Match Interfaces**: `IMatchFindService`'s output (`List<List<bool>>`) was simple but limiting; it loses grouping, match type, tile keys, and special tile data.
+* **Modular Board Service Architecture**: Split gameplay board logic into composable services (tile generation, board creation, move validation, match finding, tile swapping).
+* **Modular Match Finder Architecture**: The match finder system now supports a list of `ITileMatchRule`'s.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

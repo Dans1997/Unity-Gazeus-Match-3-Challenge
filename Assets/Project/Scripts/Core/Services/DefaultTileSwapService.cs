@@ -3,6 +3,7 @@ using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Helpers;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
+using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services;
 using UnityEngine;
 
@@ -12,16 +13,18 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
     {
         private readonly IMatchFindService matchFindService;
         private readonly ITileGenerationService tileGenerationService;
+        private readonly ITileMatchRule[] matchRules;
         private readonly TileKey[] availableTileKeys;
 
         public DefaultTileSwapService(IMatchFindService matchFindService, ITileGenerationService tileGenerationService,
-            TileKey[] availableTileKeys)
+            ITileMatchRule[] matchRules, TileKey[] availableTileKeys)
         {
-            this.matchFindService = matchFindService ?? new DefaultMatchFindService();
+            this.matchFindService = matchFindService;
             this.tileGenerationService = tileGenerationService;
+            this.matchRules = matchRules;
             this.availableTileKeys = availableTileKeys;
         }
-        
+
         public IBoardSwapResult SwapTile(IBoardState boardState, int fromX, int fromY, int toX, int toY)
         {
             var newBoard = GameplayHelpers.CopyGameplayBoard(boardState.BoardTiles);
@@ -29,27 +32,23 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            var matchedTiles = matchFindService.FindMatches(newBoard);
+            var findMatchResult = matchFindService.FindMatches(newBoard, matchRules);
+            var matchedPositionSet = findMatchResult.MatchedPositionsSet;
 
-            while (HasMatch(matchedTiles))
+            while (matchedPositionSet.Count > 0)
             {
-                List<Vector2Int> matchedPosition = new();
-                for (var y = 0; y < newBoard.Count; y++)
+                foreach (var matchedPosition in matchedPositionSet)
                 {
-                    for (var x = 0; x < newBoard[y].Count; x++)
-                    {
-                        if (!matchedTiles[y][x]) continue;
-                        matchedPosition.Add(new Vector2Int(x, y));
-                        newBoard[y][x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
-                    }
+                    newBoard[matchedPosition.y][matchedPosition.x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
                 }
 
                 Dictionary<int, MovedTileInfo> movedTiles = new();
                 List<MovedTileInfo> movedTilesList = new();
-                for (var i = 0; i < matchedPosition.Count; i++)
+                foreach (var matchedPosition in matchedPositionSet)
                 {
-                    var x = matchedPosition[i].x;
-                    var y = matchedPosition[i].y;
+                    var x = matchedPosition.x;
+                    var y = matchedPosition.y;
+
                     if (y <= 0) continue;
                     
                     for (var j = y; j > 0; j--)
@@ -95,31 +94,14 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                     }
                 }
 
-                BoardSequence sequence = new()
-                {
-                    MatchedPosition = matchedPosition,
-                    MovedTiles = movedTilesList,
-                    AddedTiles = addedTiles
-                };
-                boardSequences.Add(sequence);
-                matchedTiles = matchFindService.FindMatches(newBoard);
+                var newBoardSequence = new BoardSequence(movedTilesList, addedTiles, matchedPositionSet);
+                boardSequences.Add(newBoardSequence);
+                findMatchResult = matchFindService.FindMatches(newBoard, matchRules);
+                matchedPositionSet = findMatchResult.MatchedPositionsSet;
             }
 
             boardState.BoardTiles = newBoard;
             return new DefaultBoardSwapResult(boardState, boardSequences, 0);
-        }
-        
-        private static bool HasMatch(List<List<bool>> list)
-        {
-            foreach (var t in list)
-            {
-                foreach (var t1 in t)
-                {
-                    if (t1) return true;
-                }
-            }
-
-            return false;
         }
     }
 }
