@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Helpers;
@@ -11,18 +12,18 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 {
     public class DefaultTileSwapService : ITileSwapService
     {
+        private readonly TileKey[] availableTileKeys;
         private readonly IMatchFindService matchFindService;
         private readonly ITileGenerationService tileGenerationService;
-        private readonly ITileMatchRule[] matchRules;
-        private readonly TileKey[] availableTileKeys;
+        private readonly ITileMatchRule[] tileMatchRules;
 
-        public DefaultTileSwapService(IMatchFindService matchFindService, ITileGenerationService tileGenerationService,
-            ITileMatchRule[] matchRules, TileKey[] availableTileKeys)
+        public DefaultTileSwapService(GameplayInfo gameplayInfo, IMatchFindService matchFindService, 
+            ITileGenerationService tileGenerationService, ITileMatchRule[] tileMatchRules)
         {
+            this.availableTileKeys = gameplayInfo.AvailableTileConfigs.Select(c => c.TileKey).ToArray();
             this.matchFindService = matchFindService;
             this.tileGenerationService = tileGenerationService;
-            this.matchRules = matchRules;
-            this.availableTileKeys = availableTileKeys;
+            this.tileMatchRules = tileMatchRules;
         }
 
         public IBoardSwapResult SwapTile(IBoardState boardState, int fromX, int fromY, int toX, int toY)
@@ -32,7 +33,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            var findMatchResult = matchFindService.FindMatches(newBoard, matchRules);
+            var findMatchResult = matchFindService.FindMatches(newBoard, tileMatchRules);
             var matchedPositionSet = findMatchResult.MatchedPositionsSet;
 
             while (matchedPositionSet.Count > 0)
@@ -96,7 +97,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 
                 var newBoardSequence = new BoardSequence(movedTilesList, addedTiles, matchedPositionSet);
                 boardSequences.Add(newBoardSequence);
-                findMatchResult = matchFindService.FindMatches(newBoard, matchRules);
+                findMatchResult = matchFindService.FindMatches(newBoard, tileMatchRules);
                 matchedPositionSet = findMatchResult.MatchedPositionsSet;
             }
 

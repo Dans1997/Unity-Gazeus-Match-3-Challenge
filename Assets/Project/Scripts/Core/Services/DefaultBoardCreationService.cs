@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
@@ -17,7 +18,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
         {
             this.width = gameplayInfo.BoardWidth;
             this.height = gameplayInfo.BoardHeight;
-            this.availableTileKeys = gameplayInfo.AvailableTileKeys;
+            this.availableTileKeys = gameplayInfo.AvailableTileConfigs.Select(c => c.TileKey).ToArray();
             this.tileGenerationService = tileGenerationService;
         }
 

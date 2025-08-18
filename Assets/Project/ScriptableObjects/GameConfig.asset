@@ -48,33 +48,9 @@ MonoBehaviour:
     - Name: BoardCellViewPrefabKey
       Entry: 3
       Data: 0
-    - Name: AvailableTileKeys
-      Entry: 7
-      Data: 0|Gazeus.DesafioMatch3.Project.Script.Enums.TileKey[], Match3Challenge
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
+    - Name: BoardTileViewPrefabKey
       Entry: 3
       Data: 0
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: BoardVisualConfig
       Entry: 7
       Data: Gazeus.DesafioMatch3.Models.BoardVisualConfig, Match3Challenge
@@ -108,15 +84,162 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: AvailableTileConfigs
+      Entry: 7
+      Data: 0|Gazeus.DesafioMatch3.Models.BoardTileConfig[], Match3Challenge
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 1|Gazeus.DesafioMatch3.Models.BoardTileConfig, Match3Challenge
+    - Name: TileKey
+      Entry: 3
+      Data: 0
+    - Name: Weight
+      Entry: 3
+      Data: 10
+    - Name: BoardTileDestructionConfig
+      Entry: 7
+      Data: 2|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
+    - Name: DestructionDuration
+      Entry: 4
+      Data: 0
+    - Name: TileDestructionKey
+      Entry: 3
+      Data: 0
+    - Name: DestructionSoundEffectKey
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Gazeus.DesafioMatch3.Models.BoardTileConfig, Match3Challenge
+    - Name: TileKey
+      Entry: 3
+      Data: 1
+    - Name: Weight
+      Entry: 3
+      Data: 10
+    - Name: BoardTileDestructionConfig
+      Entry: 7
+      Data: 4|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
+    - Name: DestructionDuration
+      Entry: 4
+      Data: 0
+    - Name: TileDestructionKey
+      Entry: 3
+      Data: 0
+    - Name: DestructionSoundEffectKey
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Gazeus.DesafioMatch3.Models.BoardTileConfig, Match3Challenge
+    - Name: TileKey
+      Entry: 3
+      Data: 2
+    - Name: Weight
+      Entry: 3
+      Data: 1
+    - Name: BoardTileDestructionConfig
+      Entry: 7
+      Data: 6|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
+    - Name: DestructionDuration
+      Entry: 4
+      Data: 0
+    - Name: TileDestructionKey
+      Entry: 3
+      Data: 0
+    - Name: DestructionSoundEffectKey
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Gazeus.DesafioMatch3.Models.BoardTileConfig, Match3Challenge
+    - Name: TileKey
+      Entry: 3
+      Data: 3
+    - Name: Weight
+      Entry: 3
+      Data: 10
+    - Name: BoardTileDestructionConfig
+      Entry: 7
+      Data: 8|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
+    - Name: DestructionDuration
+      Entry: 4
+      Data: 0
+    - Name: TileDestructionKey
+      Entry: 3
+      Data: 0
+    - Name: DestructionSoundEffectKey
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Gazeus.DesafioMatch3.Models.BoardTileConfig, Match3Challenge
+    - Name: TileKey
+      Entry: 3
+      Data: 4
+    - Name: Weight
+      Entry: 3
+      Data: 10
+    - Name: BoardTileDestructionConfig
+      Entry: 7
+      Data: 10|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
+    - Name: DestructionDuration
+      Entry: 4
+      Data: 0
+    - Name: TileDestructionKey
+      Entry: 3
+      Data: 0
+    - Name: DestructionSoundEffectKey
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: TileMatchRules
       Entry: 7
-      Data: 1|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig[], Match3Challenge
+      Data: 11|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig[], Match3Challenge
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 2|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig, Match3Challenge
+      Data: 12|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig, Match3Challenge
     - Name: TileMatchType
       Entry: 3
       Data: 0
@@ -137,7 +260,7 @@ MonoBehaviour:
       Data: 
     - Name: GameEndRules
       Entry: 7
-      Data: 3|Gazeus.DesafioMatch3.Models.GameRuleConfig[], Match3Challenge
+      Data: 13|Gazeus.DesafioMatch3.Models.GameRuleConfig[], Match3Challenge
     - Name: 
       Entry: 12
       Data: 3
@@ -164,7 +287,7 @@ MonoBehaviour:
       Data: 1
     - Name: ScoreThreshold
       Entry: 3
-      Data: 100
+      Data: 1000
     - Name: TimerSeconds
       Entry: 4
       Data: 0
@@ -182,7 +305,7 @@ MonoBehaviour:
       Data: 0
     - Name: TimerSeconds
       Entry: 4
-      Data: 60
+      Data: 360
     - Name: 
       Entry: 8
       Data: 
@@ -200,12 +323,12 @@ MonoBehaviour:
       Data: Gazeus.DesafioMatch3.Models.AudioControllerConfig, Match3Challenge
     - Name: AudioClips
       Entry: 7
-      Data: 4|System.Collections.Generic.Dictionary`2[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
+      Data: 14|System.Collections.Generic.Dictionary`2[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
         Match3Challenge],[Gazeus.DesafioMatch3.Models.AudioClipConfig, Match3Challenge]],
         mscorlib
     - Name: comparer
       Entry: 7
-      Data: 5|System.Collections.Generic.EnumEqualityComparer`1[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
+      Data: 15|System.Collections.Generic.EnumEqualityComparer`1[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
         Match3Challenge]], mscorlib
     - Name: 
       Entry: 12

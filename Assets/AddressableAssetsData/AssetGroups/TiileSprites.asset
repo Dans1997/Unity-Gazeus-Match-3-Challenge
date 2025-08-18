@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 9f7b3f5444f99024f8b073f75c6831f8
   m_SerializeEntries:
   - m_GUID: 09ec0aadae50292428acb6bea10e868e
-    m_Address: ArthropodaTIleSprite
+    m_Address: ArthropodaTileSprite
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

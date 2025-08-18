@@ -8,6 +8,7 @@ namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables
     {
         UniTask<T> LoadAssetAsync<T>(string key);
         UniTask<T> LoadAssetAsync<T>(Enum key);
+        UniTask<T[]> LoadAssetsAsync<T>(string[] keys);
         UniTask<T[]> LoadAssetsAsync<TEnum, T>(TEnum[] keys);
         UniTask<T> InstantiateAsync<T>(Enum key, Transform parent = null);
         void Release<T>(T asset);

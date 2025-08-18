@@ -17,6 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 80bce84b3795ef8469359c32cea41073
   m_SerializeEntries:
+  - m_GUID: 07f5264f8416cee4ca3ce8670d181e1f
+    m_Address: DefaultBoardTileView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - view
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 232d82018de3c854d922b1e2fdb110ab
+    m_Address: DefaultTileDestructionView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - view
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 24ee9696dcfde044689eb6ce619aacea
     m_Address: DefaultMainMenuView
     m_ReadOnly: 0

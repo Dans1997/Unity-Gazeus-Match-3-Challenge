@@ -30,14 +30,14 @@ namespace Gazeus.DesafioMatch3.Core.Services
                 .Select(config => new TileMatchRuleFactory().Create(config))
                 .ToArray();
             
-            this.tileGenerationService = tileGenerationService ?? new DefaultTileGenerationService();
+            this.tileGenerationService = tileGenerationService ?? new DefaultTileGenerationService(GameplayInfo);
             this.matchFindService = matchFindService ?? new DefaultMatchFindService();
             
-            this.boardCreationService = boardCreationService ?? new DefaultBoardCreationService(gameplayInfo, this.tileGenerationService);
+            this.boardCreationService = boardCreationService ?? new DefaultBoardCreationService(GameplayInfo, this.tileGenerationService);
             this.moveValidationService = moveValidationService ?? new DefaultMoveValidationService(this.matchFindService,
                 MatchRules);
-            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(this.matchFindService, 
-                this.tileGenerationService, MatchRules, gameplayInfo.AvailableTileKeys);
+            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(GameplayInfo, this.matchFindService, 
+                this.tileGenerationService, MatchRules);
         }
 
         public void CreateBoard() => BoardState = boardCreationService.CreateBoard();

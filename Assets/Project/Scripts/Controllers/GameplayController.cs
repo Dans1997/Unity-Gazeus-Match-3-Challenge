@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Core.Services;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Models.BoardTiles;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.DesafioMatch3.Views;
 using Gazeus.Match3Challenge.Project.Script.Interfaces.Addressables;
@@ -39,8 +40,6 @@ namespace Gazeus.DesafioMatch3.Controllers
         public int SelectedX => SelectedCellView?.Position.x ?? -1;
         public int SelectedY => SelectedCellView?.Position.y ?? -1;
         
-        private GameObject boardCellViewPrefab;
-        private TilePrefabInfo[] preloadedTiles;
         private float gameStartTime;
 
         public GameplayController(GameplayInfo gameplayInfo, IAssetLoadService assetLoadService)
@@ -59,12 +58,21 @@ namespace Gazeus.DesafioMatch3.Controllers
         public async UniTask Initialize()
         {
             GameplayView = await AssetLoadService.InstantiateAsync<GameplayView>(GameplayInfo.GameplayViewPrefabKey);
-            boardCellViewPrefab = await AssetLoadService.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
-            preloadedTiles = await LoadTilesAsync(GameplayInfo.AvailableTileKeys);
+            var boardCellViewPrefab = await AssetLoadService.LoadAssetAsync<GameObject>(GameplayInfo.BoardCellViewPrefabKey);
+            var boardTileViewPrefab = await AssetLoadService.LoadAssetAsync<GameObject>(GameplayInfo.BoardTileViewPrefabKey);
+            var boardTileLoadedAssets = await LoadBoardTileAssetsAsync(GameplayInfo.AvailableTileConfigs);
             
             BoardService.CreateBoard();
-            GameplayView.ConfigureBoardVisuals(GameplayInfo.BoardVisualConfig, BoardService.BoardState.BoardTiles[0].Count);
-            GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles, boardCellViewPrefab.GetComponent<IBoardCellView>(), preloadedTiles);
+            
+            GameplayView.ConfigureBoardVisuals
+            (
+                GameplayInfo.BoardVisualConfig, 
+                boardTileLoadedAssets, 
+                boardCellViewPrefab.GetComponent<IBoardCellView>(), 
+                boardTileViewPrefab.GetComponent<IBoardTileView>(), 
+                BoardService.BoardState.BoardTiles[0].Count
+            );
+            GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles);
         }
         
         public void Dispose()
@@ -209,20 +217,28 @@ namespace Gazeus.DesafioMatch3.Controllers
             
             GameEnded?.Invoke(gameEndResults);
         }
-
-        private async UniTask<TilePrefabInfo[]> LoadTilesAsync(TileKey[] keys)
+        
+        private async UniTask<BoardTileLoadedAssets[]> LoadBoardTileAssetsAsync(BoardTileConfig[] boardTileConfigs)
         {
-            var maxIndex = keys.Max(k => (int)k);
-            var entries = new TilePrefabInfo[maxIndex + 1];
-            var prefabs = await AssetLoadService.LoadAssetsAsync<TileKey, GameObject>(keys);
-            
-            for (var i = 0; i < keys.Length; i++)
-            {
-                var key = keys[i];
-                entries[(int)key] = new TilePrefabInfo(key, prefabs[i]);
-            }
+            var loadedAssets = new BoardTileLoadedAssets[boardTileConfigs.Length];
 
-            return entries;
+            var spriteKeys = boardTileConfigs.Select(c => c.TileSpriteKey).ToArray();
+            var destructionKeys =
+                boardTileConfigs.Select(c => c.BoardTileDestructionConfig.TileDestructionKey).ToArray();
+            
+            var tileSprite = await AssetLoadService.LoadAssetsAsync<Sprite>(spriteKeys);
+            var destructionPrefab = await AssetLoadService.LoadAssetsAsync<TileDestructionKey, GameObject>(destructionKeys);
+
+            for (var i = 0; i < loadedAssets.Length; i++)
+            {
+                loadedAssets[i] = new BoardTileLoadedAssets
+                (
+                    tileSprite[i],
+                    destructionPrefab[i]
+                );
+            }
+            
+            return loadedAssets;
         }
     }
 }

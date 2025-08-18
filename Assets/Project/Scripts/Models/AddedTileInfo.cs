@@ -5,8 +5,8 @@ namespace Gazeus.DesafioMatch3.Models
 {
     public struct AddedTileInfo
     {
-        public Vector2Int Position { get; set; }
         public TileKey Key { get; set; }
+        public Vector2Int Position { get; set; }
         
         public override string ToString()
         {

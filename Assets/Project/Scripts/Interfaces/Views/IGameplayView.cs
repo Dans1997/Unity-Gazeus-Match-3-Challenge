@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Models.BoardTiles;
 using UnityEngine;
 
 namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles
@@ -9,10 +10,11 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles
     public interface IGameplayView : IView
     {
         event Action<IBoardCellView> TileClicked;
+        public event Action<IBoardTileView> TileDestroyed;
         
-        void ConfigureBoardVisuals(BoardVisualConfig gameplayInfoBoardVisualConfig, int count);
-        void BuildBoardVisuals(IReadOnlyList<IReadOnlyList<TileInfo>> board, IBoardCellView getComponent,
-            TilePrefabInfo[] preloadedTiles);
+        void ConfigureBoardVisuals(BoardVisualConfig config, BoardTileLoadedAssets[] boardTileLoadedAssets,
+            IBoardCellView boardCellViewPrefab, IBoardTileView boardTileViewPrefab, int constraintCount);
+        void BuildBoardVisuals(IReadOnlyList<IReadOnlyList<TileInfo>> boardStateBoardTiles);
         Tween CreateTile(IReadOnlyList<AddedTileInfo> addedTiles);
         Tween DestroyTiles(IReadOnlyList<Vector2Int> matchedPosition);
         Tween MoveTiles(IReadOnlyList<MovedTileInfo> movedTiles);
