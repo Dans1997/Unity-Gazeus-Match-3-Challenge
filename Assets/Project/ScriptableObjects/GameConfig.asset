@@ -152,7 +152,7 @@ MonoBehaviour:
       Data: 2
     - Name: Weight
       Entry: 3
-      Data: 1
+      Data: 10
     - Name: BoardTileDestructionConfig
       Entry: 7
       Data: 6|Gazeus.DesafioMatch3.Models.BoardTileDestructionConfig, Match3Challenge
@@ -236,7 +236,7 @@ MonoBehaviour:
       Data: 11|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig[], Match3Challenge
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 12|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig, Match3Challenge
@@ -253,6 +253,169 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 13|Gazeus.DesafioMatch3.Models.TileMatchRuleConfig, Match3Challenge
+    - Name: TileMatchType
+      Entry: 3
+      Data: 1
+    - Name: MinLength
+      Entry: 3
+      Data: 3
+    - Name: SquareSize
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BoardEffectConfigs
+      Entry: 7
+      Data: 14|Gazeus.DesafioMatch3.Models.BoardEffects.BoardEffectConfig[], Match3Challenge
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 15|Gazeus.DesafioMatch3.Models.BoardEffects.BoardEffectConfig, Match3Challenge
+    - Name: BoardEffectType
+      Entry: 3
+      Data: 0
+    - Name: ExplosionRadius
+      Entry: 3
+      Data: 1
+    - Name: TileMatchRuleTriggers
+      Entry: 7
+      Data: 16|System.Collections.Generic.HashSet`1[[Gazeus.DesafioMatch3.Project.Script.Enums.TileMatchType,
+        Match3Challenge]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DestroyedTileTriggers
+      Entry: 6
+      Data: 
+    - Name: MinValue
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|Gazeus.DesafioMatch3.Models.BoardEffects.BoardEffectConfig, Match3Challenge
+    - Name: BoardEffectType
+      Entry: 3
+      Data: 1
+    - Name: ExplosionRadius
+      Entry: 3
+      Data: 1
+    - Name: TileMatchRuleTriggers
+      Entry: 7
+      Data: 18|System.Collections.Generic.HashSet`1[[Gazeus.DesafioMatch3.Project.Script.Enums.TileMatchType,
+        Match3Challenge]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DestroyedTileTriggers
+      Entry: 6
+      Data: 
+    - Name: MinValue
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 19|Gazeus.DesafioMatch3.Models.BoardEffects.BoardEffectConfig, Match3Challenge
+    - Name: BoardEffectType
+      Entry: 3
+      Data: 2
+    - Name: ExplosionRadius
+      Entry: 3
+      Data: 3
+    - Name: TileMatchRuleTriggers
+      Entry: 6
+      Data: 
+    - Name: DestroyedTileTriggers
+      Entry: 7
+      Data: 20|System.Collections.Generic.HashSet`1[[Gazeus.DesafioMatch3.Project.Script.Enums.TileKey,
+        Match3Challenge]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinValue
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 21|Gazeus.DesafioMatch3.Models.BoardEffects.BoardEffectConfig, Match3Challenge
+    - Name: BoardEffectType
+      Entry: 3
+      Data: 3
+    - Name: ExplosionRadius
+      Entry: 3
+      Data: 1
+    - Name: TileMatchRuleTriggers
+      Entry: 6
+      Data: 
+    - Name: DestroyedTileTriggers
+      Entry: 7
+      Data: 22|System.Collections.Generic.HashSet`1[[Gazeus.DesafioMatch3.Project.Script.Enums.TileKey,
+        Match3Challenge]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinValue
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -260,7 +423,7 @@ MonoBehaviour:
       Data: 
     - Name: GameEndRules
       Entry: 7
-      Data: 13|Gazeus.DesafioMatch3.Models.GameRuleConfig[], Match3Challenge
+      Data: 23|Gazeus.DesafioMatch3.Models.GameRuleConfig[], Match3Challenge
     - Name: 
       Entry: 12
       Data: 3
@@ -323,12 +486,12 @@ MonoBehaviour:
       Data: Gazeus.DesafioMatch3.Models.AudioControllerConfig, Match3Challenge
     - Name: AudioClips
       Entry: 7
-      Data: 14|System.Collections.Generic.Dictionary`2[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
+      Data: 24|System.Collections.Generic.Dictionary`2[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
         Match3Challenge],[Gazeus.DesafioMatch3.Models.AudioClipConfig, Match3Challenge]],
         mscorlib
     - Name: comparer
       Entry: 7
-      Data: 15|System.Collections.Generic.EnumEqualityComparer`1[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
+      Data: 25|System.Collections.Generic.EnumEqualityComparer`1[[Gazeus.DesafioMatch3.Project.Script.Enums.AudioKey,
         Match3Challenge]], mscorlib
     - Name: 
       Entry: 12

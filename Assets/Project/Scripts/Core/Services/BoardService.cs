@@ -20,10 +20,12 @@ namespace Gazeus.DesafioMatch3.Core.Services
         private readonly IBoardCreationService boardCreationService;
         private readonly IMoveValidationService moveValidationService;
         private readonly ITileSwapService tileSwapService;
+        private readonly IBoardEffectService boardEffectService;
 
         public BoardService(GameplayInfo gameplayInfo, ITileGenerationService tileGenerationService = null, 
             IBoardCreationService boardCreationService = null, IMatchFindService matchFindService = null, 
-            IMoveValidationService moveValidationService = null, ITileSwapService tileSwapService = null)
+            IMoveValidationService moveValidationService = null, ITileSwapService tileSwapService = null,
+            IBoardEffectService boardEffectService = null)
         {
             GameplayInfo = gameplayInfo;
             MatchRules = gameplayInfo.TileMatchRules    
@@ -32,12 +34,13 @@ namespace Gazeus.DesafioMatch3.Core.Services
             
             this.tileGenerationService = tileGenerationService ?? new DefaultTileGenerationService(GameplayInfo);
             this.matchFindService = matchFindService ?? new DefaultMatchFindService();
+            this.boardEffectService = boardEffectService ?? new DefaultBoardEffectService(GameplayInfo.BoardEffectConfigs);
             
             this.boardCreationService = boardCreationService ?? new DefaultBoardCreationService(GameplayInfo, this.tileGenerationService);
             this.moveValidationService = moveValidationService ?? new DefaultMoveValidationService(this.matchFindService,
                 MatchRules);
-            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(GameplayInfo, this.matchFindService, 
-                this.tileGenerationService, MatchRules);
+            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(GameplayInfo, MatchRules, this.matchFindService, 
+                this.tileGenerationService, this.boardEffectService);
         }
 
         public void CreateBoard() => BoardState = boardCreationService.CreateBoard();

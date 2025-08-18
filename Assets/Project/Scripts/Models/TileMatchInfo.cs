@@ -8,13 +8,13 @@ namespace Gazeus.DesafioMatch3.Models
     public class TileMatchInfo : ITileMatchInfo
     {
         public TileMatchType TileMatchType { get; }
-        public TileKey? Key { get; }
+        public TileKey MatchedTileType { get; }
         public IReadOnlyList<Vector2Int> Positions { get; }
         
-        public TileMatchInfo(TileMatchType type, TileKey? key, IReadOnlyList<Vector2Int> positions)
+        public TileMatchInfo(TileMatchType type, TileKey matchedTileType, IReadOnlyList<Vector2Int> positions)
         {
             TileMatchType = type;
-            Key = key;
+            MatchedTileType = matchedTileType;
             Positions = positions;
         }
     }

@@ -11,8 +11,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules.Match
         {
             return config.TileMatchType switch
             {
-                TileMatchType.StraightLine => new StraightLineTileMatchRule(config.MinLength),
-                TileMatchType.SquareShaped => new SquareShapedTileMatchRule(config.SquareSize),
+                TileMatchType.HorizontalLineMatch => new HorizontalLineTileMatchRule(config.MinLength),
+                TileMatchType.VerticalLineMatch => new VerticalLineTileMatchRule(config.MinLength),
+                TileMatchType.SquareShapedMatch => new SquareShapedTileMatchRule(config.SquareSize),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

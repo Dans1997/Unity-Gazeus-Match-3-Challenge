@@ -9,11 +9,13 @@ namespace Gazeus.DesafioMatch3.Models
     public class TileMatchRuleConfig
     {
         [OdinSerialize] public TileMatchType TileMatchType { get; private set; }
-        
-        [ShowIf(nameof(TileMatchType), TileMatchType.StraightLine)]
+
+        [ShowIf(nameof(IsLineMatch))]
         [OdinSerialize] public int MinLength { get; private set; } = 3;
         
-        [ShowIf(nameof(TileMatchType), TileMatchType.SquareShaped)]
+        [ShowIf(nameof(TileMatchType), TileMatchType.SquareShapedMatch)]
         [OdinSerialize] public int SquareSize { get; private set; } = 2; 
+        
+        private bool IsLineMatch => TileMatchType is TileMatchType.HorizontalLineMatch or TileMatchType.VerticalLineMatch;
     }
 }

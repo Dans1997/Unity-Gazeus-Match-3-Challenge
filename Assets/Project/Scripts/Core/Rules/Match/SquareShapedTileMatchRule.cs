@@ -9,7 +9,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules.Match
 {
     public class SquareShapedTileMatchRule : ITileMatchRule
     {
-        public TileMatchType TileMatchType => TileMatchType.SquareShaped;
+        public TileMatchType TileMatchType => TileMatchType.SquareShapedMatch;
         
         private readonly int size;
 
@@ -55,7 +55,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules.Match
                         }
                     }
 
-                    matches.Add(new TileMatchInfo(TileMatchType.SquareShaped, key, positions));
+                    matches.Add(new TileMatchInfo(TileMatchType.SquareShapedMatch, key, positions));
                 }
             }
 

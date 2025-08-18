@@ -16,14 +16,17 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
         private readonly IMatchFindService matchFindService;
         private readonly ITileGenerationService tileGenerationService;
         private readonly ITileMatchRule[] tileMatchRules;
+        private readonly IBoardEffectService boardEffectService;
 
-        public DefaultTileSwapService(GameplayInfo gameplayInfo, IMatchFindService matchFindService, 
-            ITileGenerationService tileGenerationService, ITileMatchRule[] tileMatchRules)
+        public DefaultTileSwapService(GameplayInfo gameplayInfo, ITileMatchRule[] tileMatchRules,
+            IMatchFindService matchFindService, ITileGenerationService tileGenerationService,
+            IBoardEffectService boardEffectService)
         {
             this.availableTileKeys = gameplayInfo.AvailableTileConfigs.Select(c => c.TileKey).ToArray();
+            this.tileMatchRules = tileMatchRules;
             this.matchFindService = matchFindService;
             this.tileGenerationService = tileGenerationService;
-            this.tileMatchRules = tileMatchRules;
+            this.boardEffectService = boardEffectService;
         }
 
         public IBoardSwapResult SwapTile(IBoardState boardState, int fromX, int fromY, int toX, int toY)
@@ -38,6 +41,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 
             while (matchedPositionSet.Count > 0)
             {
+                var extra = boardEffectService.EvaluateEffects(boardState, findMatchResult);
+                foreach (var e in extra) matchedPositionSet.Add(e);
+                
                 foreach (var matchedPosition in matchedPositionSet)
                 {
                     newBoard[matchedPosition.y][matchedPosition.x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
