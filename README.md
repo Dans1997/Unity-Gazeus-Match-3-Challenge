@@ -239,6 +239,9 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **Tile Generation**: Somewhere along the way I made the classic class/struct mistake with `TileInfo`, which duplicated tiles in the gane. They still happen from time to time though, so I guess I must have made a similar mistake somewhere else.
 * **Tile Dropping**: Fixed visual bugs caused by wrong tile drop logic. The original code didn't support multiple gaps.
 
+### **Day 7 (Aug 19th) — Final Mechanics, QoL Improvements, and Refactors**
+* **Refactored Model Classes**: Made the majority of the model classes immutable and reorganized their file structure.
+
 *(Future days will detail added features, fixes, and design choices.)*
 
 ##  Conclusion

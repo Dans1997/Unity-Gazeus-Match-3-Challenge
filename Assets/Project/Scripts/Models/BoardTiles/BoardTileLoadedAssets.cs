@@ -7,8 +7,8 @@ namespace Gazeus.DesafioMatch3.Models.BoardTiles
     [Serializable]
     public class BoardTileLoadedAssets
     {
-        [OdinSerialize] public Sprite TileSprite { get; }
-        [OdinSerialize] public GameObject DestructionPrefab { get; }
+        [OdinSerialize] public Sprite TileSprite { get; private set; }
+        [OdinSerialize] public GameObject DestructionPrefab { get; private set; }
 
         public BoardTileLoadedAssets(Sprite tileSprite, GameObject destructionPrefab = null)
         {

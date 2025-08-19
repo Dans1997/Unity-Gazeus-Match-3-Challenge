@@ -6,10 +6,10 @@ using Sirenix.Serialization;
 namespace Gazeus.DesafioMatch3.Models
 {
     [Serializable]
-    public class BoardTileConfig
+    public struct BoardTileConfig
     {
         [OdinSerialize] public TileKey TileKey { get; private set; }
-        [OdinSerialize] [PropertyRange(0, 100)] public int Weight { get; private set; } = 1;
+        [OdinSerialize] [PropertyRange(0, 100)] public int Weight { get; private set; }
         [OdinSerialize] public BoardTileDestructionConfig BoardTileDestructionConfig { get; private set; }
         [OdinSerialize] public string TileSpriteKey => $"{TileKey}Sprite";
     }

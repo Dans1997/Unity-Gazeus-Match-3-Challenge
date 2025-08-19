@@ -24,15 +24,15 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 
         public IBoardState CreateBoard()
         {
-            var board = new List<List<TileInfo>>(height);
+            var board = new List<List<BoardTileInfo>>(height);
             var boardState = new DefaultBoardState(board, 0);;
 
             for (var y = 0; y < height; y++)
             {
-                board.Add(new List<TileInfo>(width));
+                board.Add(new List<BoardTileInfo>(width));
                 for (var x = 0; x < width; x++)
                 {
-                    board[y].Add(new TileInfo { Id = -1, Key = (TileKey) (-1) });
+                    board[y].Add(new BoardTileInfo(-1, (TileKey) (-1)));
                 }
             }
 

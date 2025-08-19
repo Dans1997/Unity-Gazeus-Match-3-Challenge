@@ -10,7 +10,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 {
     public class DefaultMatchFindService : IMatchFindService
     {
-        public FindMatchResult FindMatches(IReadOnlyList<IReadOnlyList<TileInfo>> board, 
+        public FindMatchResult FindMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board, 
             IReadOnlyList<ITileMatchRule> matchRules)
         {
             var matches = new List<ITileMatchInfo>();

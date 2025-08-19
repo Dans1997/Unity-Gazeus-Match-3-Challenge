@@ -5,9 +5,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models
 {
     public interface IBoardState
     {
-        List<List<TileInfo>> BoardTiles { get; set; }
+        List<List<BoardTileInfo>> BoardTiles { get; set; }
+        public int TileCount { get; set; }
         int BoardHeight { get; }
         public int BoardWidth { get; }
-        public int TileCount { get; set; }
     }
 }

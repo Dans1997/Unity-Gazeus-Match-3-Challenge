@@ -5,6 +5,6 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services
 {
     public interface ITileGenerationService
     {
-        public TileInfo GenerateNextTile(IBoardState boardState);
+        public BoardTileInfo GenerateNextTile(IBoardState boardState);
     }
 }

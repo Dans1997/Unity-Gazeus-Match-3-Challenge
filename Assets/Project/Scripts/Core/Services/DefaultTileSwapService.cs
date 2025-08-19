@@ -45,7 +45,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                 
                 foreach (var matchedPosition in matchedPositions)
                 {
-                    newBoard[matchedPosition.y][matchedPosition.x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
+                    newBoard[matchedPosition.y][matchedPosition.x] = new BoardTileInfo(-1, (TileKey) (-1));
                 }
 
                 var movedTilesList = DropTiles(newBoard);
@@ -57,10 +57,10 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             while (findMatchResult.MatchedPositions.Count > 0);
             
             boardState.BoardTiles = newBoard;
-            return new DefaultBoardSwapResult(boardState, newBoardSequences, 0);
+            return new BoardSwapResult(boardState, newBoardSequences, 0);
         }
         
-        private static List<MovedTileInfo> DropTiles(List<List<TileInfo>> newBoard)
+        private static List<MovedTileInfo> DropTiles(List<List<BoardTileInfo>> newBoard)
         {
             var height = newBoard.Count;
             if (height == 0) return new List<MovedTileInfo>();
@@ -69,7 +69,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 
             for (var x = 0; x < width; x++)
             {
-                var tilesInColumn = new List<TileInfo>();
+                var tilesInColumn = new List<BoardTileInfo>();
                 var originalPositions = new List<int>();
         
                 for (var y = 0; y < height; y++)
@@ -81,7 +81,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                 
                 for (var y = 0; y < height; y++)
                 {
-                    newBoard[y][x] = new TileInfo { Id = -1, Key = (TileKey)(-1) };
+                    newBoard[y][x] = new BoardTileInfo(-1, (TileKey) (-1));
                 }
                 
                 var startY = height - tilesInColumn.Count;
@@ -106,7 +106,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             return movedTilesList;
         }
         
-        private List<AddedTileInfo> GenerateNewTiles(IBoardState boardState, List<List<TileInfo>> newBoard)
+        private List<AddedTileInfo> GenerateNewTiles(IBoardState boardState, List<List<BoardTileInfo>> newBoard)
         {
             List<AddedTileInfo> addedTiles = new();
             for (var y = newBoard.Count - 1; y > -1; y--)

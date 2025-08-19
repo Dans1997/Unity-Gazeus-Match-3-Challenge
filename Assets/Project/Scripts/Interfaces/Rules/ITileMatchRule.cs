@@ -8,6 +8,6 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules
     public interface ITileMatchRule
     {
         TileMatchType TileMatchType { get; }
-        List<ITileMatchInfo> FindMatches(IReadOnlyList<IReadOnlyList<TileInfo>> board);
+        List<ITileMatchInfo> FindMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board);
     }
 }

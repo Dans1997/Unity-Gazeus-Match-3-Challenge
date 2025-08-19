@@ -18,7 +18,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules.Match
             this.size = Mathf.Max(2, size);
         }
         
-        public List<ITileMatchInfo> FindMatches(IReadOnlyList<IReadOnlyList<TileInfo>> board)
+        public List<ITileMatchInfo> FindMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board)
         {
             var matches = new List<ITileMatchInfo>();
 

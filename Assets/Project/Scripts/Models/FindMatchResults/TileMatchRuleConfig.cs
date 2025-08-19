@@ -6,15 +6,15 @@ using Sirenix.Serialization;
 namespace Gazeus.DesafioMatch3.Models
 {
     [Serializable]
-    public class TileMatchRuleConfig
+    public struct TileMatchRuleConfig
     {
         [OdinSerialize] public TileMatchType TileMatchType { get; private set; }
 
         [ShowIf(nameof(IsLineMatch))]
-        [OdinSerialize] public int MinLength { get; private set; } = 3;
+        [OdinSerialize] public int MinLength { get; private set; }
         
         [ShowIf(nameof(TileMatchType), TileMatchType.SquareShapedMatch)]
-        [OdinSerialize] public int SquareSize { get; private set; } = 2; 
+        [OdinSerialize] public int SquareSize { get; private set; }
         
         private bool IsLineMatch => TileMatchType is TileMatchType.HorizontalLineMatch or TileMatchType.VerticalLineMatch;
     }

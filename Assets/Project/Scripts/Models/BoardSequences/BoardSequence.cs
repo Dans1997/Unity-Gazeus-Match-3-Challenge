@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Models
 {
+    [Serializable]
     public class BoardSequence
     {
         public IReadOnlyList<MovedTileInfo> MovedTiles { get; private set; }
@@ -15,7 +17,7 @@ namespace Gazeus.DesafioMatch3.Models
         {
             MovedTiles = movedTiles;
             AddedTiles = addedTiles;
-            MatchedPositions = matchedPositions.ToList();
+            MatchedPositions = matchedPositions;
         }
         
         public override string ToString()

@@ -6,7 +6,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services
 {
     public interface IMatchFindService
     {
-        public FindMatchResult FindMatches(IReadOnlyList<IReadOnlyList<TileInfo>> board, 
+        public FindMatchResult FindMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board, 
             IReadOnlyList<ITileMatchRule> matchRules);
     }
 }

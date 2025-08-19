@@ -3,13 +3,13 @@ using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 
 namespace Gazeus.DesafioMatch3.Models
 {
-    public class DefaultBoardSwapResult : IBoardSwapResult
+    public class BoardSwapResult : IBoardSwapResult
     {
         public IBoardState NewState { get; }
         public IReadOnlyList<BoardSequence> Sequences { get; }
-        public int ScoreGained { get; } 
+        public int ScoreGained { get; } // TODO:
 
-        public DefaultBoardSwapResult(IBoardState newState, IReadOnlyList<BoardSequence> sequences, int scoreGained = 0)
+        public BoardSwapResult(IBoardState newState, IReadOnlyList<BoardSequence> sequences, int scoreGained = 0)
         {
             NewState = newState;
             Sequences = sequences;

@@ -1,5 +1,4 @@
 using System;
-using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using Sirenix.Serialization;
 using UnityEngine;
 

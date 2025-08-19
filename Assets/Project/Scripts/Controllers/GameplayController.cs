@@ -208,12 +208,8 @@ namespace Gazeus.DesafioMatch3.Controllers
 
         private void EndGame(IReadOnlyCollection<IGameEndRule> triggeredEndGameRules)
         {
-            var gameEndResults = new GameEndResults
-            {
-                FinalScore = ScoreService.CurrentScore,
-                FinalTimeInSeconds = Time.time - gameStartTime,
-                TriggeredEndRules = triggeredEndGameRules
-            };
+            var gameEndResults = new GameEndResults(ScoreService.CurrentScore, Time.time - gameStartTime,
+                triggeredEndGameRules);
             
             GameEnded?.Invoke(gameEndResults);
         }

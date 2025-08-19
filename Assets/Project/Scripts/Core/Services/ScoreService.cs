@@ -29,11 +29,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             var newScore = CurrentScore + scoreDelta;
 
             SetScore(newScore);
-            return new BoardSequenceScoreInfo
-            {
-                OldScore = oldScore,
-                NewScore = newScore
-            };
+            return new BoardSequenceScoreInfo(oldScore, newScore);
         }
     }
 }

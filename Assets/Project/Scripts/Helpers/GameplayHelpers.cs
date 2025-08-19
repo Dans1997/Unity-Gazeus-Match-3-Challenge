@@ -5,16 +5,16 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Helpers
 {
     public static class GameplayHelpers
     {
-        public static List<List<TileInfo>> CopyGameplayBoard(IReadOnlyList<IReadOnlyList<TileInfo>> boardToCopy)
+        public static List<List<BoardTileInfo>> CopyGameplayBoard(IReadOnlyList<IReadOnlyList<BoardTileInfo>> boardToCopy)
         {
-            List<List<TileInfo>> newBoard = new(boardToCopy.Count);
+            List<List<BoardTileInfo>> newBoard = new(boardToCopy.Count);
             for (var y = 0; y < boardToCopy.Count; y++)
             {
-                newBoard.Add(new List<TileInfo>(boardToCopy[y].Count));
+                newBoard.Add(new List<BoardTileInfo>(boardToCopy[y].Count));
                 for (var x = 0; x < boardToCopy[y].Count; x++)
                 {
                     var tile = boardToCopy[y][x];
-                    newBoard[y].Add(new TileInfo { Id = tile.Id, Key = tile.Key });
+                    newBoard[y].Add(new BoardTileInfo(tile.Id, tile.Key));
                 }
             }
 

@@ -1,8 +1,10 @@
-﻿using Gazeus.DesafioMatch3.Project.Script.Enums;
+﻿using System;
+using Gazeus.DesafioMatch3.Project.Script.Enums;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Models
 {
+    [Serializable]
     public struct AddedTileInfo
     {
         public int Id { get; private set; }

@@ -7,17 +7,17 @@ using Sirenix.Serialization;
 namespace Gazeus.DesafioMatch3.Models.BoardEffects
 {
     [Serializable]
-    public class BoardEffectConfig
+    public struct BoardEffectConfig
     {
         [OdinSerialize] public BoardEffectType BoardEffectType { get; private set; }
         [ShowIf(nameof(BoardEffectType), BoardEffectType.SquareExplosionBoardEffect)]
-        [OdinSerialize, PropertyRange(1, 100)] public int ExplosionRadius { get; private set; } = 3;
+        [OdinSerialize, PropertyRange(1, 100)] public int ExplosionRadius { get; private set; }
 
         [OdinSerialize] public HashSet<TileMatchType> TileMatchRuleTriggers { get; private set; }
         [OdinSerialize] public HashSet<TileKey> DestroyedTileTriggers { get; private set; }
         
         [ShowIf(nameof(HasTileTriggers))]
-        [OdinSerialize, PropertyRange(1, 100)] public int MinValue { get; private set; } = 3;
+        [OdinSerialize, PropertyRange(1, 100)] public int MinValue { get; private set; }
 
         public bool HasTileTriggers => HasTileMatchRuleTriggers || HasDestroyedTilesTriggers;
         public bool HasTileMatchRuleTriggers => TileMatchRuleTriggers is { Count: > 0 };

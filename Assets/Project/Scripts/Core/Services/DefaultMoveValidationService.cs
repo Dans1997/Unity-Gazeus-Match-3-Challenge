@@ -57,13 +57,13 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             var maxX = Math.Min(boardState.BoardWidth - 1, Math.Max(x1, x2) + localPadding);
             var maxY = Math.Min(boardState.BoardHeight - 1, Math.Max(y1, y2) + localPadding);
 
-            var sub = new List<List<TileInfo>>(maxY - minY + 1);
+            var sub = new List<List<BoardTileInfo>>(maxY - minY + 1);
             for (var sy = minY; sy <= maxY; sy++)
             {
-                var row = new List<TileInfo>(maxX - minX + 1);
+                var row = new List<BoardTileInfo>(maxX - minX + 1);
                 for (var sx = minX; sx <= maxX; sx++)
                 {
-                    row.Add(new TileInfo { Id = board[sy][sx].Id, Key = board[sy][sx].Key });
+                    row.Add(new BoardTileInfo(board[sy][sx].Id, board[sy][sx].Key));
                 }
                 sub.Add(row);
             }

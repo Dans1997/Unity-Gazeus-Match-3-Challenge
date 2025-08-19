@@ -55,7 +55,7 @@ namespace Gazeus.DesafioMatch3.Views
             scoreFormat = config.ScoreFormat;
         }
 
-        public void BuildBoardVisuals(IReadOnlyList<IReadOnlyList<TileInfo>> board)
+        public void BuildBoardVisuals(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board)
         {
             _tiles = new IBoardTileView[board.Count][];
             _boardCells = new IBoardCellView[board.Count][];
@@ -162,7 +162,6 @@ namespace Gazeus.DesafioMatch3.Views
         {
             return DOTween.To(() => boardSequenceScoreInfo.OldScore, value =>
             {
-                boardSequenceScoreInfo.OldScore = value;
                 scoreText.text = value.ToString(format: scoreFormat);
             }, 
             boardSequenceScoreInfo.NewScore, duration).SetEase(Ease.OutCubic);
