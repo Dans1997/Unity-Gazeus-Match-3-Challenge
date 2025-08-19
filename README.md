@@ -237,6 +237,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **Tile Explosion**: Added a generic tile explosion animation as a placeholder. The original idea was to make each tile explode in different ways. 
 * **Tile Swap Service Refactor**: Split `DefaultTileSwapService` into more digestible functions to spot visual bug more easily.
 * **Tile Generation**: Somewhere along the way I made the classic class/struct mistake with `TileInfo`, which duplicated tiles in the gane. They still happen from time to time though, so I guess I must have made a similar mistake somewhere else.
+* **Tile Dropping**: Fixed visual bugs caused by wrong tile drop logic. The original code didn't support multiple gaps.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

@@ -48,7 +48,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                     newBoard[matchedPosition.y][matchedPosition.x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
                 }
 
-                var movedTilesList = MoveTilesDown(matchedPositions, newBoard);
+                var movedTilesList = DropTiles(newBoard);
                 var addedTiles = GenerateNewTiles(boardState, newBoard);
 
                 var newBoardSequence = new BoardSequence(movedTilesList, addedTiles, matchedPositions.ToList());
@@ -59,44 +59,50 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             boardState.BoardTiles = newBoard;
             return new DefaultBoardSwapResult(boardState, newBoardSequences, 0);
         }
-
-        private static List<MovedTileInfo> MoveTilesDown(IReadOnlyCollection<Vector2Int> matchedPositions, 
-            List<List<TileInfo>> newBoard)
+        
+        private static List<MovedTileInfo> DropTiles(List<List<TileInfo>> newBoard)
         {
-            Dictionary<int, MovedTileInfo> movedTiles = new();
-            List<MovedTileInfo> movedTilesList = new();
-            foreach (var matchedPosition in matchedPositions)
-            {
-                var x = matchedPosition.x;
-                var y = matchedPosition.y;
+            var height = newBoard.Count;
+            if (height == 0) return new List<MovedTileInfo>();
+            var width = newBoard[0].Count;
+            var movedTilesList = new List<MovedTileInfo>();
 
-                if (y <= 0) continue;
-                    
-                for (var j = y; j > 0; j--)
+            for (var x = 0; x < width; x++)
+            {
+                var tilesInColumn = new List<TileInfo>();
+                var originalPositions = new List<int>();
+        
+                for (var y = 0; y < height; y++)
                 {
-                    var movedTile = newBoard[j - 1][x];
-                    newBoard[j][x] = movedTile;
-                    if (movedTile.Key == (TileKey) (-1)) continue;
-                            
-                    if (movedTiles.TryGetValue(movedTile.Id, out var tile))
+                    if (newBoard[y][x].Key == (TileKey)(-1)) continue;
+                    tilesInColumn.Add(newBoard[y][x]);
+                    originalPositions.Add(y);
+                }
+                
+                for (var y = 0; y < height; y++)
+                {
+                    newBoard[y][x] = new TileInfo { Id = -1, Key = (TileKey)(-1) };
+                }
+                
+                var startY = height - tilesInColumn.Count;
+                for (var i = 0; i < tilesInColumn.Count; i++)
+                {
+                    var targetY = startY + i;
+                    var tile = tilesInColumn[i];
+                    var originalY = originalPositions[i];
+            
+                    newBoard[targetY][x] = tile;
+                    
+                    if (originalY != targetY)
                     {
-                        tile.To = new Vector2Int(x, j);
-                    }
-                    else
-                    {
-                        MovedTileInfo movedTileInfo = new()
-                        {
-                            From = new Vector2Int(x, j - 1),
-                            To = new Vector2Int(x, j)
-                        };
-                        movedTiles.Add(movedTile.Id, movedTileInfo);
-                        movedTilesList.Add(movedTileInfo);
+                        movedTilesList.Add(new MovedTileInfo(
+                            new Vector2Int(x, originalY),
+                            new Vector2Int(x, targetY)
+                        ));
                     }
                 }
-
-                newBoard[0][x] = new TileInfo { Id = -1, Key = (TileKey) (-1) };
             }
-
+    
             return movedTilesList;
         }
         
