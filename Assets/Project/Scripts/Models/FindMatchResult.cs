@@ -10,12 +10,12 @@ namespace Gazeus.DesafioMatch3.Models
     public class FindMatchResult
     {
         [OdinSerialize] public IReadOnlyList<ITileMatchInfo> Matches { get; private set; }
-        [OdinSerialize] public HashSet<Vector2Int> MatchedPositionsSet { get; private set; }
+        [OdinSerialize] public HashSet<Vector2Int> MatchedPositions { get; private set; }
 
-        public FindMatchResult(IReadOnlyList<ITileMatchInfo> matches, HashSet<Vector2Int> matchedPositionsSet)
+        public FindMatchResult(IReadOnlyList<ITileMatchInfo> matches, HashSet<Vector2Int> matchedPositions)
         {
             Matches = matches;
-            MatchedPositionsSet = matchedPositionsSet;
+            MatchedPositions = matchedPositions;
         }
     }
 }

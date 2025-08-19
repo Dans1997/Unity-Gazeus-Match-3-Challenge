@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
@@ -34,7 +33,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             totalWeight = Mathf.Max(0, sum);
         }
 
-        public void GenerateNextTile(TileInfo tileInfo, IReadOnlyList<TileKey> tileKeys, IBoardState boardState)
+        public void GenerateNextTile(TileInfo tileInfo, IBoardState boardState)
         {
             var r = Random.value * totalWeight;
             var idx = BinarySearchCumulative(r);

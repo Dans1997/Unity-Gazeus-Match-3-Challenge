@@ -77,7 +77,7 @@ namespace Gazeus.DesafioMatch3.Views
                     var tileTypeIndex = (int) board[y][x].Key;
                     if (tileTypeIndex <= -1) continue;
                     
-                    var tile = SpawnBoardTileView(board[y][x].Key, boardCell);
+                    var tile = SpawnBoardTileView(boardCell, board[y][x].Id, board[y][x].Key);
 
                     _tiles[y][x] = tile;
                 }
@@ -92,7 +92,7 @@ namespace Gazeus.DesafioMatch3.Views
                 var addedTileInfo = addedTiles[i];
                 var position = addedTileInfo.Position;
                 var boardCell = _boardCells[position.y][position.x];
-                var tile = SpawnBoardTileView(addedTileInfo.Key, boardCell);
+                var tile = SpawnBoardTileView(boardCell, addedTileInfo.Id, addedTileInfo.Key);
 
                 _tiles[position.y][position.x] = tile;
 
@@ -168,10 +168,11 @@ namespace Gazeus.DesafioMatch3.Views
             boardSequenceScoreInfo.NewScore, duration).SetEase(Ease.OutCubic);
         }
         
-        private IBoardTileView SpawnBoardTileView(TileKey tileKey, IBoardCellView boardCell)
+        private IBoardTileView SpawnBoardTileView(IBoardCellView boardCell, int id, TileKey tileKey)
         {
             var tilePrefabInfo = _tilePrefabInfos[(int)tileKey];
             var tile = LeanPool.Spawn(_boardTilePrefab.Transform).GetComponent<IBoardTileView>();
+            tile.Transform.gameObject.name = $"{tileKey} #{id}";
             tile.ConfigureTileVisuals(tilePrefabInfo);
             boardCell.SetTile(tile.Transform);
             return tile;

@@ -11,7 +11,7 @@ namespace Gazeus.DesafioMatch3.Models
         public IReadOnlyList<Vector2Int> MatchedPositions { get; private set; }
         
         public BoardSequence(IReadOnlyList<MovedTileInfo> movedTiles, IReadOnlyList<AddedTileInfo> addedTiles, 
-            HashSet<Vector2Int> matchedPositions)
+            IReadOnlyList<Vector2Int> matchedPositions)
         {
             MovedTiles = movedTiles;
             AddedTiles = addedTiles;

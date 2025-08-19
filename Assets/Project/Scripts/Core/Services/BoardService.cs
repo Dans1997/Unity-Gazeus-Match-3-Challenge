@@ -39,7 +39,7 @@ namespace Gazeus.DesafioMatch3.Core.Services
             this.boardCreationService = boardCreationService ?? new DefaultBoardCreationService(GameplayInfo, this.tileGenerationService);
             this.moveValidationService = moveValidationService ?? new DefaultMoveValidationService(this.matchFindService,
                 MatchRules);
-            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(GameplayInfo, MatchRules, this.matchFindService, 
+            this.tileSwapService = tileSwapService ?? new DefaultTileSwapService(MatchRules, this.matchFindService, 
                 this.tileGenerationService, this.boardEffectService);
         }
 

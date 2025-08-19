@@ -37,7 +37,7 @@ namespace Gazeus.DesafioMatch3.Views
             tileTransform.SetParent(transform);
             tileTransform.DOKill();
 
-            return tileTransform.DOMove(transform.position, 0.3f);
+            return tileTransform.DOMove(transform.position, 0.5f);
         }
         
         public void SetPosition(Vector2Int position) => Position = position;
