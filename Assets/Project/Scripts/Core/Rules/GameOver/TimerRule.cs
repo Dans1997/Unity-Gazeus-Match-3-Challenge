@@ -10,6 +10,8 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
 {
     public class TimerRule : IAsyncGameEndRule
     {
+        public event Action<float> TimeLeftUpdated;
+        
         public GameRuleKey GameRuleKey => GameRuleKey.TimerRule;
         public string Message => $"Time's Up! Start: {StartTime} | End: {EndTime}";
         public float DurationInSeconds { get; private set; }
@@ -17,8 +19,9 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
         public float TimeLeft =>  Math.Max(0f, DurationInSeconds - ElapsedTime);
         public float StartTime { get; private set; }
         public float EndTime { get; private set; }
+        public float UpdateIntervalInSeconds { get; private set; } 
 
-        public TimerRule(float durationInSeconds = 60f)
+        public TimerRule(float durationInSeconds = 60f, float updateIntervalInSeconds = 1f)
         {
             DurationInSeconds = durationInSeconds;
         }
@@ -32,9 +35,17 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
             Action<IGameEndRule> onGameEnd)
         {
             StartTime = Time.time;
-            await UniTask.Delay(TimeSpan.FromSeconds(DurationInSeconds));
-            EndTime = Time.time;
             
+            while (ElapsedTime < DurationInSeconds)
+            {
+                var remaining = DurationInSeconds - ElapsedTime;
+                var delaySeconds = Math.Min(UpdateIntervalInSeconds, remaining);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds));
+                TimeLeftUpdated?.Invoke(TimeLeft);
+            }
+
+            EndTime = Time.time;
             onGameEnd?.Invoke(this);
         }
     }

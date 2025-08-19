@@ -12,7 +12,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
         
         public bool IsGameOver(IBoardService boardService, IScoreService scoreService)
         {
-            return !boardService.HasAnyValidMove();
+            return !boardService.HasAnyValidMove(out _);
         }
     }
 }

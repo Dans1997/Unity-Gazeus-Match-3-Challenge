@@ -135,6 +135,12 @@ namespace Gazeus.DesafioMatch3.Core.GameInitialization
         {
             gameplayController.GameEnded -= OnGameEnded;
             gameOverScreenController = await LoadGameOverScreenAsync(gameEndResults);
+            if (gameEndResults.TriggeredEndRules == null)
+            {
+                Debug.Log($"[GameplayController] Game Ended with no end rule triggers");
+                return;
+            }
+            
             
             var allMessages = string.Join("; ", gameEndResults.TriggeredEndRules.Select(r => r.Message).ToArray());
             Debug.Log($"[GameplayController] Game Ended: {allMessages}");

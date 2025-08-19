@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Models.BoardTiles;
 using Gazeus.DesafioMatch3.Project.Script.Enums;
 using Gazeus.Match3Challenge.Project.Scripts.Helpers;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
+using Gazeus.Match3Challenge.Project.Scripts.Models.BoardTiles;
 using Lean.Pool;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -19,6 +21,8 @@ namespace Gazeus.DesafioMatch3.Views
     {
         public event Action<IBoardCellView> TileClicked;
         public event Action<IBoardTileView> TileDestroyed;
+        public event Action HintButtonClicked;
+        public event Action QuitGameButtonClicked;
         
         public Transform Transform => transform;
         
@@ -28,6 +32,10 @@ namespace Gazeus.DesafioMatch3.Views
         [FoldoutGroup("Board")] [OdinSerialize, ReadOnly] private BoardTileLoadedAssets[] _tilePrefabInfos;
         [FoldoutGroup("Score")] [OdinSerialize] private TMP_Text scoreText;
         [FoldoutGroup("Score")] [OdinSerialize, ReadOnly] private string scoreFormat;
+        [FoldoutGroup("Time")] [OdinSerialize] private CanvasGroup timeCanvasGroup;
+        [FoldoutGroup("Time")] [OdinSerialize] private TMP_Text timeText;
+        [FoldoutGroup("Buttons")] [OdinSerialize] private Button hintButton;
+        [FoldoutGroup("Buttons")] [OdinSerialize] private Button quitGameButton;
         [FoldoutGroup("Prefabs")] [OdinSerialize, ReadOnly] private IBoardCellView _boardCellPrefab;
         [FoldoutGroup("Prefabs")] [OdinSerialize, ReadOnly] private IBoardTileView _boardTilePrefab;
 
@@ -39,6 +47,14 @@ namespace Gazeus.DesafioMatch3.Views
         private void Start()
         {
             _boardContainer.transform.DestroyAllChildren();
+            hintButton.onClick.AddListener(OnHintButtonClicked);
+            quitGameButton.onClick.AddListener(OnQuitGameButtonClicked);
+        }
+
+        private void OnDestroy()
+        {
+            hintButton.onClick.RemoveListener(OnHintButtonClicked);
+            quitGameButton.onClick.RemoveListener(OnQuitGameButtonClicked);
         }
 
         public void ConfigureBoardVisuals(BoardVisualConfig config,
@@ -55,7 +71,7 @@ namespace Gazeus.DesafioMatch3.Views
             scoreFormat = config.ScoreFormat;
         }
 
-        public void BuildBoardVisuals(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board)
+        public async UniTask BuildBoardVisuals(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board)
         {
             _tiles = new IBoardTileView[board.Count][];
             _boardCells = new IBoardCellView[board.Count][];
@@ -82,6 +98,8 @@ namespace Gazeus.DesafioMatch3.Views
                     _tiles[y][x] = tile;
                 }
             }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
 
         public Tween CreateTile(IReadOnlyList<AddedTileInfo> addedTiles)
@@ -166,7 +184,38 @@ namespace Gazeus.DesafioMatch3.Views
             }, 
             boardSequenceScoreInfo.NewScore, duration).SetEase(Ease.OutCubic);
         }
-        
+
+        public void UpdateTime(float timeLeft)
+        {
+            timeCanvasGroup.alpha = 1f;
+            timeText.text = timeLeft.FormatTime();
+        }
+
+        public async void HighlightBoardMatch(ValidTileMoveInfo validMoveInfo, float duration = 3) 
+        {
+            if (_boardCells == null) return;
+            var validPositions = new List<Vector2Int>();
+            var validCells = new List<IBoardCellView>();
+            
+            validPositions.Add(validMoveInfo.From);
+            validPositions.Add(validMoveInfo.To);
+            
+            foreach (var position in validPositions) 
+            {
+                var row = _boardCells[position.y];
+                var boardCellView = row[position.x];
+                validCells.Add(boardCellView);
+                boardCellView.SetSelected(true);
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(duration));
+
+            foreach (var cell in validCells)
+            {
+                cell.SetSelected(false);
+            }
+        }
+
         private IBoardTileView SpawnBoardTileView(IBoardCellView boardCell, int id, TileKey tileKey)
         {
             var tilePrefabInfo = _tilePrefabInfos[(int)tileKey];
@@ -177,9 +226,8 @@ namespace Gazeus.DesafioMatch3.Views
             return tile;
         }
 
-        private void OnBoardCellClicked(IBoardCellView position)
-        {
-            TileClicked?.Invoke(position);
-        }
+        private void OnBoardCellClicked(IBoardCellView position) => TileClicked?.Invoke(position);
+        private void OnHintButtonClicked() => HintButtonClicked?.Invoke();
+        private void OnQuitGameButtonClicked() => QuitGameButtonClicked?.Invoke();
     }
 }

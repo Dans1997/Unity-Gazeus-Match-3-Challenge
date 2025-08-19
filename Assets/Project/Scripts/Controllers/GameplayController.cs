@@ -72,23 +72,26 @@ namespace Gazeus.DesafioMatch3.Controllers
                 boardTileViewPrefab.GetComponent<IBoardTileView>(), 
                 BoardService.BoardState.BoardWidth
             );
-            GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles);
+            
+            foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
+            {
+                if (asyncRule is TimerRule timerRule) // TODO: Assuming only one timer rule
+                {
+                    GameplayView.UpdateTime(timerRule.DurationInSeconds);
+                    timerRule.TimeLeftUpdated += GameplayView.UpdateTime;
+                }
+            }
+            
+            await GameplayView.BuildBoardVisuals(BoardService.BoardState.BoardTiles);
         }
         
-        public void Dispose()
-        {
-            if (GameplayView == null) return;
-            GameplayView.TileClicked -= OnTileClick;
-            AssetLoadService.Release(GameplayView.Transform.gameObject);
-            GameplayView = null;
-            
-            ScoreService.ScoreUpdated -= OnScoreUpdated;
-        }
-
         public void StartGame()
         {
             gameStartTime = Time.time;
             GameplayView.TileClicked += OnTileClick;
+            GameplayView.TileDestroyed += OnTileDestroyed;
+            GameplayView.HintButtonClicked += OnHintButtonClicked;
+            GameplayView.QuitGameButtonClicked += OnQuitGameButtonClicked;
             ScoreService.ScoreUpdated += OnScoreUpdated;
             
             foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
@@ -98,10 +101,26 @@ namespace Gazeus.DesafioMatch3.Controllers
             
             GameStarted?.Invoke();
         }
-
-        private void OnScoreUpdated(int newScore)
+        
+        public void Dispose()
         {
-            ScoreUpdated?.Invoke();
+            if (GameplayView == null) return;
+            GameplayView.TileClicked -= OnTileClick;
+            GameplayView.TileDestroyed -= OnTileDestroyed;
+            GameplayView.HintButtonClicked -= OnHintButtonClicked;
+            GameplayView.QuitGameButtonClicked -= OnQuitGameButtonClicked;
+            ScoreService.ScoreUpdated -= OnScoreUpdated;
+            
+            foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
+            {
+                if (asyncRule is TimerRule timerRule) 
+                {
+                    timerRule.TimeLeftUpdated -= GameplayView.UpdateTime;
+                }
+            }
+            
+            AssetLoadService.Release(GameplayView.Transform.gameObject);
+            GameplayView = null;
         }
 
         private void AnimateBoard(IReadOnlyList<BoardSequence> boardSequences, int index, Action onComplete)
@@ -151,7 +170,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             IsAnimating = true;
             GameplayView.SwapTiles(SelectedX, SelectedY, x, y).onComplete += () =>
             {
-                var isValid = BoardService.IsValidMovement(SelectedX, SelectedY, x, y);
+                var isValid = BoardService.IsValidMove(SelectedX, SelectedY, x, y);
                 if (isValid)
                 {
                     var swapResult = BoardService.SwapTile(SelectedX, SelectedY, x, y);
@@ -167,6 +186,12 @@ namespace Gazeus.DesafioMatch3.Controllers
             };
             
             TileSwapped?.Invoke();
+        }
+        
+        private void OnHintButtonClicked()
+        {
+            BoardService.HasAnyValidMove(out var firstValidMove);
+            GameplayView.HighlightBoardMatch(firstValidMove);
         }
 
         private void SelectBoardCellView(IBoardCellView boardCellView)
@@ -236,5 +261,13 @@ namespace Gazeus.DesafioMatch3.Controllers
             
             return loadedAssets;
         }
+        
+        private void OnTileDestroyed(IBoardTileView boardTileView)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnQuitGameButtonClicked() => EndGame(null);
+        private void OnScoreUpdated(int newScore) => ScoreUpdated?.Invoke();
     }
 }

@@ -6,6 +6,7 @@ using Gazeus.Match3Challenge.Project.Scripts.Core.Services;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Models;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Rules;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Services;
+using Gazeus.Match3Challenge.Project.Scripts.Models.BoardTiles;
 
 namespace Gazeus.DesafioMatch3.Core.Services
 {
@@ -44,8 +45,13 @@ namespace Gazeus.DesafioMatch3.Core.Services
         }
 
         public void CreateBoard() => BoardState = boardCreationService.CreateBoard();
-        public bool IsValidMovement(int fromX, int fromY, int toX, int toY) => moveValidationService.IsValidMove(BoardState, fromX, fromY, toX, toY);
-        public bool HasAnyValidMove() => moveValidationService.HasAnyValidMove(BoardState);
+        public bool IsValidMove(int fromX, int fromY, int toX, int toY) => moveValidationService.IsValidMove(BoardState, fromX, fromY, toX, toY, out _);
+        public bool HasAnyValidMove(out FindMatchResult findMatchResult)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool HasAnyValidMove(out ValidTileMoveInfo firstValidMove) => moveValidationService.HasAnyValidMove(BoardState, out firstValidMove);
         public IBoardSwapResult SwapTile(int fromX, int fromY, int toX, int toY) => tileSwapService.SwapTile(BoardState, fromX, fromY, toX, toY);
     }
 }

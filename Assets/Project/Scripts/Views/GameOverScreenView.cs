@@ -1,6 +1,6 @@
 using System;
-using System.Globalization;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.Match3Challenge.Project.Scripts.Helpers;
 using Gazeus.Match3Challenge.Project.Scripts.Interfaces.Tiles;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -36,7 +36,7 @@ namespace Gazeus.DesafioMatch3.Views
         public void SetGameEndResults(GameplayInfo gameplayInfo, GameEndResults gameEndResults)
         {
             FinalScoreText.text = gameEndResults.FinalScore.ToString();
-            FinalTimeText.text = gameEndResults.FinalTimeInSeconds.ToString(CultureInfo.InvariantCulture);
+            FinalTimeText.text = gameEndResults.FinalTimeInSeconds.FormatTime();
         }
 
         private void OnReplayButtonClicked() => ReplayClicked?.Invoke();

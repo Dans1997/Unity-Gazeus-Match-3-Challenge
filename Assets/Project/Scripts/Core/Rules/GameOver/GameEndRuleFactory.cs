@@ -13,7 +13,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
             {
                 GameRuleKey.NoMovesLeftRule => new NoMovesLeftRule(),
                 GameRuleKey.ScoreThresholdRule => new ScoreThresholdRule(config.ScoreThreshold),
-                GameRuleKey.TimerRule => new TimerRule(config.TimerSeconds),
+                GameRuleKey.TimerRule => new TimerRule(config.TimerSeconds, config.UpdateIntervalInSeconds),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

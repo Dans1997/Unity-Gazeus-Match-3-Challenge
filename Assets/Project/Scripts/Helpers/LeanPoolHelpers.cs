@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gazeus.Match3Challenge.Project.Scripts.Helpers
 {
-    public static class LeanPoolHelper
+    public static class LeanPoolHelpers
     {
         public static void DespawnAfterDelay(this GameObject gameObject, float delay)
         {

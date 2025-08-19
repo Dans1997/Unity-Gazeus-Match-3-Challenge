@@ -15,5 +15,8 @@ namespace Gazeus.DesafioMatch3.Models
 
         [ShowIf(nameof(RuleKey), GameRuleKey.TimerRule)] 
         [OdinSerialize] public float TimerSeconds { get; private set; }
+
+        [ShowIf(nameof(RuleKey), GameRuleKey.TimerRule)] 
+        [OdinSerialize] public float UpdateIntervalInSeconds { get; private set; }
     }
 }
