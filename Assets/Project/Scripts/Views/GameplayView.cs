@@ -108,7 +108,8 @@ namespace Gazeus.DesafioMatch3.Views
             foreach (var matchedPosition in matchedPositions)
             {
                 var boardTileView = _tiles[matchedPosition.y][matchedPosition.x];
-                boardTileView.PlayDestructionSequence();
+                var destructionObject = boardTileView.PlayDestructionSequence();
+                destructionObject.DespawnAfterDelay(2f); // TODO: Hardcoded. Pass duration later
                 LeanPool.Despawn(boardTileView.Transform);
                 _tiles[matchedPosition.y][matchedPosition.x] = null;
             }

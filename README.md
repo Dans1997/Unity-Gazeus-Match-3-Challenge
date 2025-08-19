@@ -234,6 +234,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 * **Board Effects**: The game now can trigger board effects (line clearing, square explosion, same-color wipe) that can be triggered by `ITileMatchRule` or `TileKey`.
   * **Known Issue**: `BoardEffectConfig` is not very customizable and kind of all over the place.
   * **Known Issue**: All effects simply assume the first matched position is the center of the effect. That can be weird to someone playing or to someone testing the game, but I went with this for simplicity as I'm close to the deadline (tomorrow);
+* **Tile Explosion**: Added a generic tile explosion animation as a placeholder. The original idea was to make each tile explode in different ways. 
 
 *(Future days will detail added features, fixes, and design choices.)*
 

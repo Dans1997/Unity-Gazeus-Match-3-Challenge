@@ -20,15 +20,15 @@ namespace Gazeus.DesafioMatch3.Views
             tileIconImage = GetComponentInChildren<Image>();
         }
 
-        public void ConfigureTileVisuals(BoardTileLoadedAssets loadedAssets)
+        public void ConfigureTileVisuals(BoardTileLoadedAssets assets)
         {
-            this.loadedAssets = loadedAssets;
-            tileIconImage.sprite = loadedAssets.TileSprite;
+            this.loadedAssets = assets;
+            tileIconImage.sprite = assets.TileSprite;
         }
 
-        public void PlayDestructionSequence()
+        public GameObject PlayDestructionSequence()
         {
-            // TODO: 
+            return LeanPool.Spawn(loadedAssets.DestructionPrefab, transform.position, Quaternion.identity, transform.parent);
         }
     }
 }
