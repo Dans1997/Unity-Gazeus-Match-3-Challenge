@@ -40,7 +40,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             {
                 for (var x = 0; x < width; x++)
                 {
-                    var noMatchTypes = new List<TileKey>(availableTileKeys.Length);
+                    var noMatchTypes = new List<TileKey>(availableTileKeys.Length); // TODO: This isn't doing anything
                     for (var i = 0; i < availableTileKeys.Length; i++)
                     {
                         noMatchTypes.Add(availableTileKeys[i]);

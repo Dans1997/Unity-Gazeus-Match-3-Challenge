@@ -24,6 +24,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
         public TimerRule(float durationInSeconds = 60f, float updateIntervalInSeconds = 1f)
         {
             DurationInSeconds = durationInSeconds;
+            UpdateIntervalInSeconds = updateIntervalInSeconds;
         }
 
         public bool IsGameOver(IBoardService boardService, IScoreService scoreService)
@@ -31,8 +32,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules
             return ElapsedTime >= DurationInSeconds;
         }
 
-        public async UniTask StartAsync(IBoardService boardService, IScoreService scoreService, 
-            Action<IGameEndRule> onGameEnd)
+        public async UniTask StartAsync(Action<IGameEndRule> onGameEnd)
         {
             StartTime = Time.time;
             

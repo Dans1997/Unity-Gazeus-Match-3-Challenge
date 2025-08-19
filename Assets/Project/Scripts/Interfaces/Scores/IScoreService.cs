@@ -8,7 +8,7 @@ namespace Gazeus.Match3Challenge.Project.Script.Interfaces.Scores
         event Action<int> ScoreUpdated;
         int CurrentScore { get; }
 
-        public void SetScore(int newScore);
+        public void UpdateScore(int newScore);
         BoardSequenceScoreInfo CalculateSequenceScore(BoardSequence boardSequence, int index);
     }
 }

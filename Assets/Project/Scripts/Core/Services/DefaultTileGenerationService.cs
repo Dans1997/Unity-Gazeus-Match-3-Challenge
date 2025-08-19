@@ -11,14 +11,13 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
 {
     public class DefaultTileGenerationService : ITileGenerationService
     {
-        private readonly BoardTileConfig[] boardTileConfigs;
         private readonly TileKey[] availableTileKeys;
         private readonly int[] cumulative;
         private readonly int totalWeight;
 
         public DefaultTileGenerationService(GameplayInfo gameplayInfo)
         {
-            this.boardTileConfigs = gameplayInfo.AvailableTileConfigs;
+            var boardTileConfigs = gameplayInfo.AvailableTileConfigs;
             availableTileKeys = boardTileConfigs.Select(c => c.TileKey).ToArray();
             cumulative = new int[boardTileConfigs.Length];
 

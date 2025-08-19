@@ -30,7 +30,8 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Rules.Match
             return matches;
         }
 
-        private void FindVerticalMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board, int height, int width, List<ITileMatchInfo> outMatches)
+        private void FindVerticalMatches(IReadOnlyList<IReadOnlyList<BoardTileInfo>> board, int height, int width, 
+            List<ITileMatchInfo> outMatches)
         {
             for (var x = 0; x < width; x++)
             {

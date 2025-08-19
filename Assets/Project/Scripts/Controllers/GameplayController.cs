@@ -96,7 +96,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             
             foreach (var asyncRule in GameEndRules.OfType<IAsyncGameEndRule>())
             {
-                asyncRule.StartAsync(BoardService, ScoreService, OnAsyncRuleTriggered).Forget(); 
+                asyncRule.StartAsync(OnAsyncRuleTriggered).Forget(); 
             }
             
             GameStarted?.Invoke();

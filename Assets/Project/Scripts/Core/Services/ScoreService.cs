@@ -14,7 +14,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             // TODO: release managed resources here
         }
 
-        public void SetScore(int newScore)
+        public void UpdateScore(int newScore)
         {
             CurrentScore = newScore;
             ScoreUpdated?.Invoke(CurrentScore);
@@ -28,7 +28,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             var oldScore = CurrentScore;
             var newScore = CurrentScore + scoreDelta;
 
-            SetScore(newScore);
+            UpdateScore(newScore);
             return new BoardSequenceScoreInfo(oldScore, newScore);
         }
     }

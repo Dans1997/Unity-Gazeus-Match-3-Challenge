@@ -722,40 +722,40 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _boardContainer
+    - Name: BoardContainer
       Entry: 6
       Data: 
-    - Name: _tiles
+    - Name: TileViews
       Entry: 6
       Data: 
-    - Name: _boardCells
+    - Name: BoardCellViews
       Entry: 6
       Data: 
-    - Name: _tilePrefabInfos
+    - Name: LoadedAssets
       Entry: 6
       Data: 
-    - Name: scoreText
+    - Name: ScoreText
       Entry: 10
       Data: 0
-    - Name: scoreFormat
+    - Name: ScoreFormat
       Entry: 6
       Data: 
-    - Name: timeCanvasGroup
+    - Name: TimeCanvasGroup
       Entry: 10
       Data: 1
-    - Name: timeText
+    - Name: TimeText
       Entry: 10
       Data: 2
-    - Name: hintButton
+    - Name: HintButton
       Entry: 10
       Data: 3
-    - Name: quitGameButton
+    - Name: QuitGameButton
       Entry: 10
       Data: 4
-    - Name: _boardCellPrefab
+    - Name: BoardCellPrefab
       Entry: 6
       Data: 
-    - Name: _boardTilePrefab
+    - Name: BoardTilePrefab
       Entry: 6
       Data: 
 --- !u!1 &3152176125119324385

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Gazeus.DesafioMatch3.Models;
@@ -35,7 +36,39 @@ namespace Gazeus.DesafioMatch3.Controllers
         
         public void Dispose()
         {
-            // TODO release managed resources here
+            try
+            {
+                UnregisterGameplayController();
+
+                if (MusicSource != null)
+                {
+                    MusicSource.Stop();
+                    AssetLoadService?.Release(MusicSource.gameObject);
+                    MusicSource = null;
+                }
+
+                if (SfxSource != null)
+                {
+                    SfxSource.Stop();
+                    AssetLoadService?.Release(SfxSource.gameObject);
+                    SfxSource = null;
+                }
+
+                if (LoadedAudioClips != null && AssetLoadService != null)
+                {
+                    foreach (var clip in LoadedAudioClips)
+                    {
+                        if (clip != null) AssetLoadService.Release(clip);
+                    }
+                }
+                
+                LoadedAudioClips = null;
+                gameplayController = null;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[AudioController] Dispose failed: {e}");
+            }
         }
 
         public void PlayMusic(AudioKey audioKey)
@@ -75,7 +108,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             controller.GameEnded += OnGameEnded;
         }
 
-        public void UnregisterGameplayController()
+        private void UnregisterGameplayController()
         {
             if (gameplayController == null) return;
             
@@ -85,6 +118,8 @@ namespace Gazeus.DesafioMatch3.Controllers
             gameplayController.TileSwapped -= OnTileSwapped;
             gameplayController.ScoreUpdated -= OnScoreUpdated;
             gameplayController.GameEnded -= OnGameEnded;
+
+            gameplayController = null;
         }
 
         private void OnGameStarted() => PlaySfx(AudioKey.GameStartedSfx);
