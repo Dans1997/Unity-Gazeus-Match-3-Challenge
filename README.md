@@ -242,6 +242,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
 ### **Day 7 (Aug 19th) — Final Mechanics, QoL Improvements, and Refactors**
 * **Refactored Model Classes**: Made the majority of the model classes immutable and reorganized their file structure.
 * **Hint System**: Implemented simple hint system and added option to quit the game. Also, `GameplayView` now shows time left in the match.
+* **Game Flow Controller**: `GameInitializationContainer` was getting too big for a `MonoBehaviour`. I took some work off of it and put it into `GameBootstrapper`.  
 
 *(Future days will detail added features, fixes, and design choices.)*
 

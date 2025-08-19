@@ -255,7 +255,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 462758443}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 222f69aa82b844a0b991a9af6d36fa84, type: 3}
+  m_Script: {fileID: 11500000, guid: 387f949d33414e859b8ef008c7a401ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -267,28 +267,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: gameConfig
-      Entry: 6
-      Data: 
-    - Name: _assetLoadService
-      Entry: 6
-      Data: 
-    - Name: controllerLoadService
-      Entry: 6
-      Data: 
-    - Name: audioController
-      Entry: 6
-      Data: 
-    - Name: mainMenuController
-      Entry: 6
-      Data: 
-    - Name: gameplayController
-      Entry: 6
-      Data: 
-    - Name: gameOverScreenController
-      Entry: 6
-      Data: 
-    - Name: loadingScreenController
+    - Name: GameFlowController
       Entry: 6
       Data: 
 --- !u!1 &1533040084
