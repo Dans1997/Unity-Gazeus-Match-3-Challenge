@@ -236,6 +236,7 @@ This yields a clear entry point and a clean gameplay loop for a prototype. Howev
   * **Known Issue**: All effects simply assume the first matched position is the center of the effect. That can be weird to someone playing or to someone testing the game, but I went with this for simplicity as I'm close to the deadline (tomorrow);
 * **Tile Explosion**: Added a generic tile explosion animation as a placeholder. The original idea was to make each tile explode in different ways. 
 * **Tile Swap Service Refactor**: Split `DefaultTileSwapService` into more digestible functions to spot visual bug more easily.
+* **Tile Generation**: Somewhere along the way I made the classic class/struct mistake with `TileInfo`, which duplicated tiles in the gane. They still happen from time to time though, so I guess I must have made a similar mistake somewhere else.
 
 *(Future days will detail added features, fixes, and design choices.)*
 

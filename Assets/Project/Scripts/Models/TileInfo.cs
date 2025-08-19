@@ -6,7 +6,7 @@ using Color = System.Drawing.Color;
 namespace Gazeus.DesafioMatch3.Models
 {
     [Serializable]
-    public class TileInfo
+    public struct TileInfo
     {
         public int Id { get; set; }
         public TileKey Key { get; set; }

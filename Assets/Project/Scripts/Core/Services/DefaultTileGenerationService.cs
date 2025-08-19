@@ -33,12 +33,16 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
             totalWeight = Mathf.Max(0, sum);
         }
 
-        public void GenerateNextTile(TileInfo tileInfo, IBoardState boardState)
+        public TileInfo GenerateNextTile(IBoardState boardState)
         {
             var r = Random.value * totalWeight;
             var idx = BinarySearchCumulative(r);
-            tileInfo.Id = boardState.TileCount++;
-            tileInfo.Key = availableTileKeys[idx];
+            var tileInfo = new TileInfo
+            {
+                Id = boardState.TileCount++,
+                Key = availableTileKeys[idx]
+            };
+            return tileInfo;
         }
 
         private int BinarySearchCumulative(float value)

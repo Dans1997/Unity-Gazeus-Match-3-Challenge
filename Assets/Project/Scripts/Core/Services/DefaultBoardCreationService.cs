@@ -56,7 +56,7 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                         noMatchTypes.Remove(board[y - 1][x].Key);
                     }
                     
-                    tileGenerationService.GenerateNextTile(board[y][x], boardState);
+                    board[y][x] = tileGenerationService.GenerateNextTile(boardState);
                 }
             }
 

@@ -109,10 +109,8 @@ namespace Gazeus.Match3Challenge.Project.Scripts.Core.Services
                 {
                     if (newBoard[y][x].Key != (TileKey) (-1)) continue;
                         
-                    var tile = newBoard[y][x];
-                    tileGenerationService.GenerateNextTile(newBoard[y][x], boardState);
-
-                    addedTiles.Add(new AddedTileInfo(tile.Id, tile.Key, new Vector2Int(x, y)));
+                    newBoard[y][x] = tileGenerationService.GenerateNextTile(boardState);
+                    addedTiles.Add(new AddedTileInfo(newBoard[y][x].Id, newBoard[y][x].Key, new Vector2Int(x, y)));
                 }
             }
 
